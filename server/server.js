@@ -21,11 +21,6 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/api/customers', require('./routes/customerRoutes'))
-app.use('/api/admins', require('./routes/adminRoutes'))
-app.use('/api/products', require('./routes/productRoutes'))
-app.use('/api/auth/admin', require('./routes/auth/authAdminRoutes'))
-app.use('/api/auth/customer', require('./routes/auth/authCustomerRoutes'))
 
 app.use(errorHandler)
 

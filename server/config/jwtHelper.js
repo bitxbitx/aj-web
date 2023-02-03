@@ -10,7 +10,6 @@ const signAccessToken = (userId) => {
         const secret = process.env.ACCESS_TOKEN_SECRET;
         const options = {
             expiresIn: '15m',
-            issuer: process.env.ISS,
             audience: userId,
         };
         jwt.sign(payload, secret, options, (err, token) => {
@@ -30,7 +29,6 @@ const signRefreshToken = (userId) => {
         const secret = process.env.REFRESH_TOKEN_SECRET;
         const options = {
             expiresIn: '30d',
-            issuer: process.env.ISS,
             audience: userId,
         };
         jwt.sign(payload, secret, options, (err, token) => {
