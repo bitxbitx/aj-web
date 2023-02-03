@@ -1,5 +1,5 @@
 const createError = require('http-errors');
-const Account = require('../models/Account');
+const Account = require('../models/accountModel');
 const { signAccessToken, signRefreshToken, verifyRefreshToken, verifyAccessToken } = require('../config/jwtHelper');
 
 const protect = async (req, res, next) => {

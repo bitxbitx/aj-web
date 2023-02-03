@@ -30,4 +30,4 @@ platformSchema.methods.toJSON = function () {
     return platformObject;
 }
 
-const Platform = mongoose.model('Platform', platformSchema);
+module.exports = mongoose.model('Platform', platformSchema);

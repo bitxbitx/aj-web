@@ -45,4 +45,4 @@ noteSchema.methods.toJSON = function () {
     return noteObject;
 }
 
-const Note = mongoose.model('Note', noteSchema);
+module.exports = mongoose.model('Note', noteSchema);

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const accountSchema = new Schema(
     {
@@ -68,9 +68,9 @@ accountSchema.pre('save', async function (next) {
     next();
 })
 
-accountSchema.methods.comparePassword = async function (password) {
+accountSchema.methods.matchPassword = async function (password) {
     const account = this;
     return await bcrypt.compare(password, account.password);
 }
 
-const Account = mongoose.model('Account', accountSchema);
+module.exports = mongoose.model('Account', accountSchema);

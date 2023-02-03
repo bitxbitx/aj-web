@@ -44,4 +44,4 @@ platformAccountSchema.post('populate', function (doc, next) {
 });
 
 
-const PlatformAccount = mongoose.model('PlatformAccount', platformAccountSchema);
+module.exports = mongoose.model('PlatformAccount', platformAccountSchema);

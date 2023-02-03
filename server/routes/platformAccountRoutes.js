@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { getPlatformaccounts, getPlatformaccountById, createPlatformaccount, updatePlatformaccount, deletePlatformaccount } = require('../controllers/platformAccountController');
+const { getPlatformAccounts, getPlatformAccountById, createPlatformAccount, updatePlatformAccount, deletePlatformAccount } = require('../controllers/platformAccountController');
 const { protect, admin } = require('../middleware/authMiddleware');
 
-router.route('/').get(getPlatformaccounts).post(protect, admin, createPlatformaccount);
-router.route('/:id').get(getPlatformaccountById).put(protect, admin, updatePlatformaccount).delete(protect, admin, deletePlatformaccount);
+router.route('/').get(getPlatformAccounts).post(protect, admin, createPlatformAccount);
+router.route('/:id').get(getPlatformAccountById).put(protect, admin, updatePlatformAccount).delete(protect, admin, deletePlatformAccount);
 
 module.exports = router;
