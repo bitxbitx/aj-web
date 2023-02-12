@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const bcrypt = require('bcrypt');
+const Platform = require('./platformModel');
+const { forEach } = require('lodash');
 
 const accountSchema = new Schema(
     {
@@ -35,12 +37,10 @@ const accountSchema = new Schema(
             trim: true,
             enums: ['admin', 'user']
         },
-        platformAccounts: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'PlatformAccount',
-            }
-        ]
+        platformAccounts: [{
+            type: Schema.Types.ObjectId,
+            ref: 'PlatformAccount'
+        }]
     },
     {
         timestamps: true,

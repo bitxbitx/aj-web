@@ -1,24 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Landing from "./components/pages/Landing/Landing";
+import Admin from "./components/pages/Admin/Admin";
+import Customer from "./components/pages/Customer/Customer";
+import { Route, Switch } from "react-router-dom";
+import ProtectedRoute from "./components/common/ProtectedRoute/ProtectedRoute";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Switch>
+      {/* <Route path="/"><Landing /></Route> */}
+      <Route path="/"><Customer /></Route>
+      <Route path="/admin"><Admin /></Route>
+      <Route path="/customer"><Customer /></Route>
+      {/* <ProtectedRoute path="/admin"><Admin /></ProtectedRoute>
+      <ProtectedRoute path="/customer"><Customer /></ProtectedRoute> */}
+    </Switch>
   );
 }
 

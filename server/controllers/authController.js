@@ -1,7 +1,9 @@
 const bcrypt = require('bcrypt');
 const asyncHandler = require('express-async-handler');
 const Account = require('../models/accountModel');
-const { signAccessToken, signRefreshToken, verifyRefreshToken, verifyAccessToken } = require('../config/jwtHelper');
+const Platform = require('../models/platformModel');
+const PlatformAccount = require('../models/platformAccountModel');
+const { signAccessToken, signRefreshToken } = require('../config/jwtHelper');
 const jwt = require('jsonwebtoken');
 
 // @desc    Auth user & get token
@@ -58,7 +60,7 @@ const register = asyncHandler(async (req, res) => {
     }
 
     const accountExists = await Account.findOne({ email });
-    
+
     if (accountExists) {
         res.status(400);
         throw new Error('Account already exists');
@@ -116,14 +118,56 @@ const updateProfile = asyncHandler(async (req, res) => {
     const account = await Account.findById(req.userId);
 
     if (account) {
+
+
         account.username = req.body.username || account.username;
         account.email = req.body.email || account.email;
+        account.birthdate = req.body.birthdate || account.birthdate;
+        account.role = req.body.role || account.role;
+
+        // await req.body.platformAccounts.forEach(async (platformAccount) => {
+        //     // TODO : Implement a better way to update platformAccounts
+        //     if (!platformAccount._id) {
+
+        //         var accountPlatformAccountFound = false;
+
+        //         console.log("account.platformAccounts", account.platformAccounts)
+        //         console.log("account", account)
+        //         await account.platformAccounts.forEach(async (accountPlatformAccount) => {
+        //             console.log("accountPlatformAccount.platform._id == platformAccount.platform", accountPlatformAccount.platform._id == platformAccount.platform)
+        //             if (accountPlatformAccount.platform._id == platformAccount.platform) {
+        //                 accountPlatformAccount.balance = platformAccount.balance;
+        //                 accountPlatformAccountFound = true;
+        //                 console.log("accountPlatformAccountFound", accountPlatformAccountFound)
+        //                 await accountPlatformAccount.save();
+        //             }
+        //         });
+        //         console.log("-----------------------")
+        //         console.log("accountPlatformAccountFound", accountPlatformAccountFound)
+        //         if ( !accountPlatformAccountFound ) {
+        //             const platform = await Platform.findById(platformAccount.platform);
+        //             const newPlatformAccount = new PlatformAccount({
+        //                 platform: platform,
+        //                 balance: platformAccount.balance,
+        //             });
+        //             // console.log("newPlatformAccount", newPlatformAccount)
+        //             account.platformAccounts.push(newPlatformAccount);
+        //             await newPlatformAccount.save();
+        //         }
+        //     } else {
+        //         const platformAccountFound = await PlatformAccount.findById(platformAccount._id);
+        //         platformAccountFound.balance = platformAccount.balance;
+        //         await platformAccountFound.save();
+        //     }
+        // });
+
         if (req.body.password) {
             account.password = req.body.password;
         }
 
+        console.log("account22", account)
         const updatedAccount = await account.save();
-
+        console.log("updatedAccount", updatedAccount)
         res.json({
             _id: updatedAccount._id,
             username: updatedAccount.username,

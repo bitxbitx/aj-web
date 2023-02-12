@@ -33,6 +33,5 @@ const upload = multer({
 
 router.route('/').get(getNotes).post(protect, upload.single('image'), createNote);
 router.route('/:id').get(getNoteById).put(protect, upload.single('image'), updateNote).delete(protect, deleteNote);
-router.route('/:id/approve').put(protect, admin, approveNote);
 
 module.exports = router;

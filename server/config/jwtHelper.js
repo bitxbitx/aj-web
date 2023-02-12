@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken');
 const createError = require('http-errors');
 require('dotenv').config();
 
-// TODO: Think about should we add payload to signAccessToken and signRefreshToken
-
 const signAccessToken = (userId) => {
     return new Promise((resolve, reject) => {
         const payload = { userId };

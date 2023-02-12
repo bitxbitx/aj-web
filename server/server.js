@@ -24,7 +24,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/auth', require('./routes/authRoutes'))
 app.use('/api/notes', require('./routes/noteRoutes'))
 app.use('/api/platforms', require('./routes/platformRoutes'))
-app.use('/api/platformAccounts', require('./routes/platformAccountRoutes'))
 
 app.use(errorHandler)
 

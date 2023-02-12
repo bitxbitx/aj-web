@@ -5,14 +5,8 @@ const platformAccountSchema = new Schema(
     {
         balance: {
             type: Number,
-            required: true,
             trim: true,
             default: 0
-        },
-        account: {
-            type: Schema.Types.ObjectId,
-            ref: 'Account',
-            required: true
         },
         platform: {
             type: Schema.Types.ObjectId,

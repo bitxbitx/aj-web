@@ -32,13 +32,14 @@ const getNoteById = asyncHandler(async (req, res) => {
 // @route   POST /api/notes
 // @access  Private
 const createNote = asyncHandler(async (req, res) => {
-    if (req.body.title && req.body.content) {
+    if (req.body.amount && req.body.method && req.file.filename) {
+        console.log("req.body", req.body);
         const note = new Note({
             amount: req.body.amount,
             method: req.body.method,
             image: req.file.filename,
-            status: req.body.status,
-            account: req.body.account,
+            status: "pending",
+            account: req.userId,
         });
 
         const createdNote = await note.save();
@@ -85,28 +86,10 @@ const deleteNote = asyncHandler(async (req, res) => {
     }
 });
 
-// @desc    Approve a note
-// @route   PUT /api/notes/:id/approve
-// @access  Private
-const approveNote = asyncHandler(async (req, res) => {
-    const note = await Note.findById(req.params.id);
-
-    if (note) {
-        note.status = 'Approved';
-        const updatedNote = await note.save();
-        // TODO : update account balance
-        res.json(updatedNote);
-    } else {
-        res.status(404);
-        throw new Error('Note not found');
-    }
-});
-
 module.exports = {
     getNotes,
     getNoteById,
     createNote,
     updateNote,
     deleteNote,
-    approveNote,
 };
