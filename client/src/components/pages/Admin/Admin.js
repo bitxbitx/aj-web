@@ -1,23 +1,23 @@
 import React from "react";
 import styles from "./Admin.module.css";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
-
 import { Switch, Route, Link } from "react-router-dom";
+import logoIcon from "../../../assets/icons/Logo.svg";
+import Notes from "./Notes/Notes";
+import AccountDetails from "./AccountDetails/AccountDetails";
+import Birthdays from "./Birthdays/Birthdays";
+import Accounts from "./Accounts/Accounts";
 
 const Admin = () => {
     return (
         <div className={styles.admin}>
             <div className={styles.sidebar}>
-                <div className={styles.logo}>
-                    <h1>Logo</h1>
+                <div className={styles.logo__container}>
+                    <img src={logoIcon} alt="logo" className={styles.logo} />
                 </div>
                 <Sidebar backgroundColor="transparent">
                     <Menu iconShape="square">
-                        <SubMenu label="Accounts" >
-                            <MenuItem component={<Link to="/admin/accounts/papaya"/>}> Papaya </MenuItem>
-                            <MenuItem component={<Link to="/admin/accounts/goji-berry"/>}> Goji Berries </MenuItem>
-                            <MenuItem component={<Link to="/admin/accounts/mango"/>}> Mango </MenuItem>
-                        </SubMenu>
+                        <MenuItem component={<Link to="/admin/accounts"/>}>Accounts</MenuItem>
                         <MenuItem component={<Link to="/admin/notes"/>}>Notes</MenuItem>
                         <MenuItem component={<Link to="/admin/birthdays"/>}>Birthdays</MenuItem>
                         <MenuItem component={<Link to="/admin/account-details"/>}>Account Details</MenuItem>
@@ -28,16 +28,16 @@ const Admin = () => {
             <div className={styles.content}>
                 <Switch>
                     <Route path="/admin/accounts">
-                        <h1>Accounts</h1>
+                        <Accounts />
                     </Route>
                     <Route path="/admin/notes">
-                        <h1>Notes</h1>
+                        <Notes />
                     </Route>
                     <Route path="/admin/birthdays">
-                        <h1>Birthdays</h1>
+                        <Birthdays />
                     </Route>
                     <Route path="/admin/account-details">
-                        <h1>Account Details</h1>
+                        <AccountDetails />
                     </Route>
                     <Route path="/logout">
                         <h1>Logout</h1>

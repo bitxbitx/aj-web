@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const bcrypt = require('bcrypt');
 const Platform = require('./platformModel');
-const { forEach } = require('lodash');
 
 const accountSchema = new Schema(
     {
@@ -35,11 +34,23 @@ const accountSchema = new Schema(
             type: String,
             required: true,
             trim: true,
-            enums: ['admin', 'user']
+            enums: ['admin', 'user', 'staff']
+        },
+        totalbalance: {
+            type: Number,
+            default: 0,
         },
         platformAccounts: [{
-            type: Schema.Types.ObjectId,
-            ref: 'PlatformAccount'
+
+            platform: {
+                type: Schema.Types.ObjectId,
+                ref: 'Platform',
+            },
+            balance: {
+                type: Number,
+                default: 0,
+            },
+
         }]
     },
     {
@@ -64,6 +75,12 @@ accountSchema.pre('save', async function (next) {
         const salt = await bcrypt.genSalt(8);
         account.password = await bcrypt.hash(account.password, salt);
     }
+
+    account.totalbalance = 0;
+
+    account.platformAccounts.forEach((platformAccount) => {
+        account.totalbalance += platformAccount.balance;
+    })
 
     next();
 })

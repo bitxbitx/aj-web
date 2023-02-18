@@ -3,6 +3,18 @@ import styles from "./InputField.module.css";
 import classnames from "classnames";
 import { useField } from "formik";
 
+/* 
+    InputField component
+    Displays a form input field
+
+    props: {
+        label: string,
+        name: string,
+        type: string,
+        placeholder: string,
+    }
+*/
+
 const InputField = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   
@@ -22,7 +34,7 @@ const InputField = ({ label, ...props }) => {
           !meta.error ? styles.valid : styles.error
         )}
       />
-      {meta.touched && meta.error && <p className="error">{meta.error} </p>}
+      {meta?.touched && meta?.error && <p className="error">{meta?.error} </p>}
     </div>
   );
 };

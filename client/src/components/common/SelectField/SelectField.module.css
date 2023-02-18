@@ -1,0 +1,51 @@
+.field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.field label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #000000DE;
+    margin-bottom: 0.5rem;
+}
+
+.field select {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: #484B6A11;
+    color: #484B6A;
+    font-size: 1rem;
+    font-weight: 600;
+    outline: none;
+}
+
+.field select::placeholder {
+    color: #484B6A99;
+}
+
+.field select:focus {
+    background-color: #484B6A22;
+}
+
+.field select:disabled {
+    background-color: #484B6A11;
+    color: #484B6A99;
+}
+
+.error {
+    color: #CC6577;
+    font-size: 0.75rem;
+    font-weight: 400;
+    margin-top: 0.5rem;
+}
+
+.field select option {
+    background-color: #484B6A11;
+    color: #484B6A;
+    font-size: 1rem;
+    font-weight: 600;
+    outline: none;
+}

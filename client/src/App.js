@@ -9,7 +9,7 @@ function App() {
   return (
     <Switch>
       {/* <Route path="/"><Landing /></Route> */}
-      <Route path="/"><Customer /></Route>
+      <Route path="/"><Admin /></Route>
       <Route path="/admin"><Admin /></Route>
       <Route path="/customer"><Customer /></Route>
       {/* <ProtectedRoute path="/admin"><Admin /></ProtectedRoute>

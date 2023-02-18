@@ -1,0 +1,46 @@
+.toolbar {
+    display: grid;
+    align-items: center;
+    width: 100%;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+    grid-template-columns: 1fr 4fr;
+}
+
+.toolbar__left {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+}
+
+.toolbar__right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 30%;
+    padding: 1rem;
+    background-color: #E4E5F1;
+    border-radius: 1rem;
+    border:none;
+
+}
+
+
+.toggleButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+}

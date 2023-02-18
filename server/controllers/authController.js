@@ -2,9 +2,7 @@ const bcrypt = require('bcrypt');
 const asyncHandler = require('express-async-handler');
 const Account = require('../models/accountModel');
 const Platform = require('../models/platformModel');
-const PlatformAccount = require('../models/platformAccountModel');
 const { signAccessToken, signRefreshToken } = require('../config/jwtHelper');
-const jwt = require('jsonwebtoken');
 
 // @desc    Auth user & get token
 // @route   POST /api/auth
@@ -125,41 +123,25 @@ const updateProfile = asyncHandler(async (req, res) => {
         account.birthdate = req.body.birthdate || account.birthdate;
         account.role = req.body.role || account.role;
 
-        // await req.body.platformAccounts.forEach(async (platformAccount) => {
-        //     // TODO : Implement a better way to update platformAccounts
-        //     if (!platformAccount._id) {
+        if ( req.body.platformAccounts) {
+            req.body.platformAccounts.forEach(async (platformAccount) => {
+                const platformFound = await Platform.findOne({ name: platformAccount.platform });
 
-        //         var accountPlatformAccountFound = false;
+                if (platformFound) {
+                    const tempPlatformAccount = account.platformAccounts.find((accountPlatformAccount) => { 
+                        return accountPlatformAccount.platform.toString() === platformFound._id.toString() });
 
-        //         console.log("account.platformAccounts", account.platformAccounts)
-        //         console.log("account", account)
-        //         await account.platformAccounts.forEach(async (accountPlatformAccount) => {
-        //             console.log("accountPlatformAccount.platform._id == platformAccount.platform", accountPlatformAccount.platform._id == platformAccount.platform)
-        //             if (accountPlatformAccount.platform._id == platformAccount.platform) {
-        //                 accountPlatformAccount.balance = platformAccount.balance;
-        //                 accountPlatformAccountFound = true;
-        //                 console.log("accountPlatformAccountFound", accountPlatformAccountFound)
-        //                 await accountPlatformAccount.save();
-        //             }
-        //         });
-        //         console.log("-----------------------")
-        //         console.log("accountPlatformAccountFound", accountPlatformAccountFound)
-        //         if ( !accountPlatformAccountFound ) {
-        //             const platform = await Platform.findById(platformAccount.platform);
-        //             const newPlatformAccount = new PlatformAccount({
-        //                 platform: platform,
-        //                 balance: platformAccount.balance,
-        //             });
-        //             // console.log("newPlatformAccount", newPlatformAccount)
-        //             account.platformAccounts.push(newPlatformAccount);
-        //             await newPlatformAccount.save();
-        //         }
-        //     } else {
-        //         const platformAccountFound = await PlatformAccount.findById(platformAccount._id);
-        //         platformAccountFound.balance = platformAccount.balance;
-        //         await platformAccountFound.save();
-        //     }
-        // });
+                    if (tempPlatformAccount) {
+                        tempPlatformAccount.balance = platformAccount.balance;
+                    } else {
+                        account.platformAccounts.push({
+                            platform: platformFound._id,
+                            balance: platformAccount.balance
+                        });
+                    }
+                }
+            });
+        }                
 
         if (req.body.password) {
             account.password = req.body.password;

@@ -43,6 +43,8 @@ const protect = async (req, res, next) => {
     })
 }
 
+
+// todo: there is an issue with the admin middleware, it is not working as intended
 const admin = async (req, res, next) => {
     const { accessToken, refreshToken } = req.cookies;
 
@@ -62,14 +64,14 @@ const admin = async (req, res, next) => {
             }
         })
     }).catch( async error => {
-        await verifyRefreshToken(refreshToken).then( async userId => {
-            if (!userId) {
+        await verifyRefreshToken(refreshToken).then( async vrtUserID => {
+            if (!vrtUserID) {
                 res.status(401);
                 next(createError.Unauthorized('Not authorized, no token'));
             }
 
-            const accessToken = await signAccessToken(userId);
-            const refreshToken = await signRefreshToken(userId);
+            const accessToken = await signAccessToken(vrtUserID);
+            const refreshToken = await signRefreshToken(vrtUserID);
 
             res
             .cookie('refreshToken', refreshToken, {
@@ -82,9 +84,10 @@ const admin = async (req, res, next) => {
                 path: '/',
                 maxAge: 15 * 60 * 1000 // 15 minutes
             })
-            Account.findById(userId).then( user => {
+
+            Account.findById(vrtUserID).then( user => {
                 if (user.role === 'admin') {
-                    req.userId = userId;
+                    req.userId = user._id;
                     next();
                 } else {
                     res.status(401);
