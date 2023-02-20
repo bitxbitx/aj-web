@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const asyncHandler = require('express-async-handler');
 const Account = require('../models/accountModel');
 const Platform = require('../models/platformModel');
-const { signAccessToken, signRefreshToken } = require('../config/jwtHelper');
+const { signAccessToken, signRefreshToken, verifyAccessToken, verifyRefreshToken } = require('../config/jwtHelper');
 
 // @desc    Auth user & get token
 // @route   POST /api/auth
@@ -123,13 +123,14 @@ const updateProfile = asyncHandler(async (req, res) => {
         account.birthdate = req.body.birthdate || account.birthdate;
         account.role = req.body.role || account.role;
 
-        if ( req.body.platformAccounts) {
+        if (req.body.platformAccounts) {
             req.body.platformAccounts.forEach(async (platformAccount) => {
                 const platformFound = await Platform.findOne({ name: platformAccount.platform });
 
                 if (platformFound) {
-                    const tempPlatformAccount = account.platformAccounts.find((accountPlatformAccount) => { 
-                        return accountPlatformAccount.platform.toString() === platformFound._id.toString() });
+                    const tempPlatformAccount = account.platformAccounts.find((accountPlatformAccount) => {
+                        return accountPlatformAccount.platform.toString() === platformFound._id.toString()
+                    });
 
                     if (tempPlatformAccount) {
                         tempPlatformAccount.balance = platformAccount.balance;
@@ -141,7 +142,7 @@ const updateProfile = asyncHandler(async (req, res) => {
                     }
                 }
             });
-        }                
+        }
 
         if (req.body.password) {
             account.password = req.body.password;
@@ -208,6 +209,117 @@ const getNewAccessToken = asyncHandler(async (req, res) => {
         });
 });
 
+//@desc     Check if user is logged in
+//@route    GET /api/auth/isLoggedIn
+//@access   Private
+const isLoggedIn = asyncHandler(async (req, res) => {
+    const { accessToken, refreshToken } = req.cookies;
+
+    if (!accessToken && !refreshToken) {
+        res.status(200).json(
+            {
+                isLoggedIn: false,
+                message: 'No access token or refresh token'
+            }
+        )
+    }
+
+    if (accessToken) {
+        const decoded = await verifyAccessToken(accessToken);
+
+        if (decoded) {
+            const account = await Account.findById(decoded).populate('platformAccounts');
+
+            if (account) {
+                const accessToken = await signAccessToken(account._id.toString());
+                const refreshToken = await signRefreshToken(account._id.toString());
+
+                res
+                    .cookie('accessToken', accessToken, {
+                        httpOnly: true,
+                        path: '/',
+                        maxAge: 15 * 60 * 1000 // 15 minutes
+                    })
+                    .cookie('refreshToken', refreshToken, {
+                        httpOnly: true,
+                        path: '/',
+                        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+                    })
+                    .json({
+                        isLoggedIn: true,
+                        role: account.role,
+                        message: 'Access token is valid',
+                    });
+            } else {
+                res.status(200).json(
+                    {
+                        isLoggedIn: false,
+                        message: 'Account not found'
+                    }
+                )
+            }
+        } else {
+            if (refreshToken) {
+                const decoded = await verifyRefreshToken(refreshToken);
+
+                if (decoded) {
+                    const account = await Account.findById(decoded).populate('platformAccounts');
+
+                    if (account) {
+                        const accessToken = await signAccessToken(account._id.toString());
+                        const refreshToken = await signRefreshToken(account._id.toString());
+
+                        res
+                            .cookie('accessToken', accessToken, {
+                                httpOnly: true,
+                                path: '/',
+                                maxAge: 15 * 60 * 1000 // 15 minutes
+                            })
+                            .cookie('refreshToken', refreshToken, {
+                                httpOnly: true,
+                                path: '/',
+                                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+                            })
+                            .json({
+                                isLoggedIn: true,
+                                role: account.role,
+                                message: 'Refresh token is valid',
+                            });
+                    } else {
+                        res.status(200).json(
+                            {
+                                isLoggedIn: false,
+                                message: 'Account not found'
+                            }
+                        )
+                    }
+                } else {
+                    res.status(200).json(
+                        {
+                            isLoggedIn: false,
+                            message: 'Refresh token is not valid'
+                        }
+                    )
+                }
+            } else {
+                res.status(200).json(
+                    {
+                        isLoggedIn: false,
+                        message: 'No refresh token'
+                    }
+                )
+            }
+        }
+    } else {
+        res.status(200).json(
+            {
+                isLoggedIn: false,
+                message: 'No access token'
+            }
+        )
+    }
+});
+
 // @desc    Logout user
 // @route   GET /api/auth/logout
 // @access  Private
@@ -231,5 +343,6 @@ module.exports = {
     updateProfile,
     deleteAccount,
     getNewAccessToken,
+    isLoggedIn,
     logout
 };

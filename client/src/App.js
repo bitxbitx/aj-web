@@ -8,12 +8,13 @@ import ProtectedRoute from "./components/common/ProtectedRoute/ProtectedRoute";
 function App() {
   return (
     <Switch>
-      {/* <Route path="/"><Landing /></Route> */}
-      <Route path="/"><Admin /></Route>
+      {/* <Route path="/"><Admin /></Route>
       <Route path="/admin"><Admin /></Route>
-      <Route path="/customer"><Customer /></Route>
-      {/* <ProtectedRoute path="/admin"><Admin /></ProtectedRoute>
-      <ProtectedRoute path="/customer"><Customer /></ProtectedRoute> */}
+      <Route path="/customer"><Customer /></Route> */}
+
+      <Route path="/" exact><Landing /></Route> 
+      <ProtectedRoute path="/admin" permitted-roles={["admin","staff"]}><Admin /></ProtectedRoute>
+      <ProtectedRoute path="/customer" premitted-roles={["customer"]}><Customer /></ProtectedRoute>
     </Switch>
   );
 }

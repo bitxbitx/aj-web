@@ -45,8 +45,8 @@ export const authApi = createApi({
             }),
 
         }),
-        checkLogin: builder.query({
-            query: () => 'checklogin',
+        isLoggedIn: builder.query({
+            query: () => 'is-logged-in',
             headers: (state) => ({
                 "Cache-Control": "no-cache, no-store, must-revalidate",
                 Pragma: "no-cache",
@@ -69,7 +69,7 @@ export const {
     useUpdateProfileMutation,
     useForgotPasswordMutation,
     useResetPasswordMutation,
-    useCheckLoginQuery,
+    useIsLoggedInQuery,    
     useLogoutQuery,
  } = authApi;
 

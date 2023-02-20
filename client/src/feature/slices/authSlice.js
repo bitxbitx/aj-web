@@ -30,7 +30,7 @@ const authSlice = createSlice({
         .addMatcher(authApi.endpoints.updateProfile.matchFulfilled, (state, action) => {
             state.user = action.payload;
         })
-        .addMatcher(authApi.endpoints.checkLogin.matchFulfilled, (state, action) => {
+        .addMatcher(authApi.endpoints.isLoggedIn.matchFulfilled, (state, action) => {
             state.isLoggedIn = action.payload.isLoggedIn;
         })
     }
