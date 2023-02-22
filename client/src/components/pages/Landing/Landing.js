@@ -5,7 +5,7 @@ import { useIsLoggedInQuery } from "../../../feature/services/auth";
 import { useHistory } from "react-router-dom";
 
 const Landing = () => {
-    const { data, isLoading, error } = useIsLoggedInQuery();
+    const { data } = useIsLoggedInQuery();
     const isLoggedIn = data?.isLoggedIn || false;
     const role = data?.role || "";
     const history = useHistory();
@@ -21,18 +21,12 @@ const Landing = () => {
                 ) : (
                     <div className={styles.landing}>
                         <div className={styles.landing__container}>
-
                             <LoginForm />
                         </div>
                     </div>
                 )
             }
         </>
-        // <div className={styles.landing}>
-        //     <div className={styles.landing__container}>
-        //         <LoginForm />
-        //     </div>
-        // </div>
     );
 }
 

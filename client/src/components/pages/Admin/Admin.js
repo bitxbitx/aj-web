@@ -7,6 +7,8 @@ import Notes from "./Notes/Notes";
 import AccountDetails from "./AccountDetails/AccountDetails";
 import Birthdays from "./Birthdays/Birthdays";
 import Accounts from "./Accounts/Accounts";
+import AddAccount from "./AddAccount/AddAccount";
+
 
 const Admin = () => {
     return (
@@ -18,6 +20,7 @@ const Admin = () => {
                 <Sidebar backgroundColor="transparent">
                     <Menu iconShape="square">
                         <MenuItem component={<Link to="/admin/accounts"/>}>Accounts</MenuItem>
+                        <MenuItem component={<Link to="/admin/add-accounts"/>}>Add Accounts</MenuItem>
                         <MenuItem component={<Link to="/admin/notes"/>}>Notes</MenuItem>
                         <MenuItem component={<Link to="/admin/birthdays"/>}>Birthdays</MenuItem>
                         <MenuItem component={<Link to="/admin/account-details"/>}>Account Details</MenuItem>
@@ -29,6 +32,9 @@ const Admin = () => {
                 <Switch>
                     <Route path="/admin/accounts">
                         <Accounts />
+                    </Route>
+                    <Route path="/admin/add-accounts">
+                        <AddAccount />
                     </Route>
                     <Route path="/admin/notes">
                         <Notes />
