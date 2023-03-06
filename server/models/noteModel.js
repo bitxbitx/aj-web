@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 const { Schema } = mongoose;
 
 const noteSchema = new Schema(
@@ -12,7 +13,7 @@ const noteSchema = new Schema(
             type: String,
             required: true,
             trim: true,
-            enums: ['cash', 'card', 'transfer']
+            enums: ['cash', 'card', 'transfer', 'cheque']
         },
         image: {
             type: String,
@@ -35,6 +36,7 @@ const noteSchema = new Schema(
         timestamps: true,
     }
 );
+noteSchema.plugin(AutoIncrement, {inc_field: 'noteNo'});
 
 noteSchema.methods.toJSON = function () {
     const note = this;

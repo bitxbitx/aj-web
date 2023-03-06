@@ -1,14 +1,12 @@
 import React from "react";
 import styles from "./AccountsCard.module.css";
-import Button from "../../../../../common/Button/Button";
 import { useHistory } from "react-router-dom";
 
 const AccountsCard = (props) => {
     const history = useHistory();
 
     const handleClick = () => {
-        console.log("clicked");
-        history.push(`/admin/accounts/${props.id}`);
+        history.push(`/admin/account/${props.id}`);
     };
 
     return (

@@ -2,7 +2,6 @@ import React from "react";
 import styles from "./Customer.module.css";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Switch, Route, Link } from "react-router-dom";
-import logoIcon from "../../../assets/icons/Logo.svg";
 import Dashboard from "./Dashboard/Dashboard";
 import AccountDetails from "./AccountDetails/AccountDetails";   
 
@@ -12,11 +11,12 @@ import AccountDetails from "./AccountDetails/AccountDetails";
 */
 
 const Customer = () => {
+    
     return (
         <div className={styles.container}>
             <div className={styles.sidebar}>
                 <div className={styles.logo__container}>
-                <img src={logoIcon} alt="logo" className={styles.logo} />
+                <img src={'http://localhost:8000/file/assets/logo.svg'} alt="logo" className={styles.logo} />
                 </div>
                 <Sidebar backgroundColor="transparent">
                     <Menu iconShape="square">

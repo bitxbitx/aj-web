@@ -116,8 +116,6 @@ const updateProfile = asyncHandler(async (req, res) => {
     const account = await Account.findById(req.userId);
 
     if (account) {
-
-
         account.username = req.body.username || account.username;
         account.email = req.body.email || account.email;
         account.birthdate = req.body.birthdate || account.birthdate;
@@ -148,9 +146,7 @@ const updateProfile = asyncHandler(async (req, res) => {
             account.password = req.body.password;
         }
 
-        console.log("account22", account)
         const updatedAccount = await account.save();
-        console.log("updatedAccount", updatedAccount)
         res.json({
             _id: updatedAccount._id,
             username: updatedAccount.username,
@@ -215,6 +211,8 @@ const getNewAccessToken = asyncHandler(async (req, res) => {
 const isLoggedIn = asyncHandler(async (req, res) => {
     const { accessToken, refreshToken } = req.cookies;
 
+    /* This is checking if the user has a valid access token and refresh token. If they don't, then
+    they are not logged in. */
     if (!accessToken && !refreshToken) {
         res.status(200).json(
             {
@@ -222,12 +220,24 @@ const isLoggedIn = asyncHandler(async (req, res) => {
                 message: 'No access token or refresh token'
             }
         )
+        throw new Error('No access token or refresh token');
     }
 
-    if (accessToken) {
+    try {
         const decoded = await verifyAccessToken(accessToken);
+        const account = await Account.findById(decoded).populate('platformAccounts');
 
-        if (decoded) {
+        if (account) {
+            res.status(200).json(
+                {
+                    isLoggedIn: true,
+                    user: account,
+                }
+            )
+        }
+    } catch (error) {
+        try {
+            const decoded = await verifyRefreshToken(refreshToken);
             const account = await Account.findById(decoded).populate('platformAccounts');
 
             if (account) {
@@ -247,77 +257,20 @@ const isLoggedIn = asyncHandler(async (req, res) => {
                     })
                     .json({
                         isLoggedIn: true,
-                        role: account.role,
-                        message: 'Access token is valid',
+                        user: account,
                     });
-            } else {
-                res.status(200).json(
-                    {
-                        isLoggedIn: false,
-                        message: 'Account not found'
-                    }
-                )
             }
-        } else {
-            if (refreshToken) {
-                const decoded = await verifyRefreshToken(refreshToken);
-
-                if (decoded) {
-                    const account = await Account.findById(decoded).populate('platformAccounts');
-
-                    if (account) {
-                        const accessToken = await signAccessToken(account._id.toString());
-                        const refreshToken = await signRefreshToken(account._id.toString());
-
-                        res
-                            .cookie('accessToken', accessToken, {
-                                httpOnly: true,
-                                path: '/',
-                                maxAge: 15 * 60 * 1000 // 15 minutes
-                            })
-                            .cookie('refreshToken', refreshToken, {
-                                httpOnly: true,
-                                path: '/',
-                                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-                            })
-                            .json({
-                                isLoggedIn: true,
-                                role: account.role,
-                                message: 'Refresh token is valid',
-                            });
-                    } else {
-                        res.status(200).json(
-                            {
-                                isLoggedIn: false,
-                                message: 'Account not found'
-                            }
-                        )
-                    }
-                } else {
-                    res.status(200).json(
-                        {
-                            isLoggedIn: false,
-                            message: 'Refresh token is not valid'
-                        }
-                    )
+        } catch (error) {
+            res.status(200).json(
+                {
+                    isLoggedIn: false,
+                    message: 'token is not valid',
                 }
-            } else {
-                res.status(200).json(
-                    {
-                        isLoggedIn: false,
-                        message: 'No refresh token'
-                    }
-                )
-            }
+            )
+            throw new Error('token is not valid');
         }
-    } else {
-        res.status(200).json(
-            {
-                isLoggedIn: false,
-                message: 'No access token'
-            }
-        )
     }
+
 });
 
 // @desc    Logout user

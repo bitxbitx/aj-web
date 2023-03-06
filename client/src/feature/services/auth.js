@@ -4,6 +4,7 @@ import { fetchBaseQuery } from '@reduxjs/toolkit/query';
 export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/api/auth/', credentials: 'include' }),
+    tagTypes: ['Auth'],
     endpoints: (builder) => ({
         login: builder.mutation({
             query: (credentials) => ({
@@ -11,15 +12,18 @@ export const authApi = createApi({
                 method: 'POST',
                 body: credentials,
             }),
+            invalidatesTags: ['Auth'],
         }),
         refreshToken: builder.mutation({
             query: () => ({
                 url: 'refresh_token',
                 method: 'POST',
             }),
+            invalidatesTags: ['Auth'],
         }),
         getMe: builder.query({
             query: () => 'me',
+            providesTags: ['Auth'],
         }),
         updateProfile: builder.mutation({
             query: (profile) => ({
@@ -27,6 +31,7 @@ export const authApi = createApi({
                 method: 'PUT',
                 body: profile,
             }),
+            invalidatesTags: ['Auth'],
         }),
 
         forgotPassword: builder.mutation({
@@ -35,6 +40,7 @@ export const authApi = createApi({
                 method: 'POST',
                 body: { email },
             }),
+            invalidatesTags: ['Auth'],
         }),
 
         resetPassword: builder.mutation({
@@ -43,7 +49,7 @@ export const authApi = createApi({
                 method: 'PUT',
                 body: { password: passwords.password },
             }),
-
+            invalidatesTags: ['Auth'],
         }),
         isLoggedIn: builder.query({
             query: () => 'is-logged-in',
@@ -52,13 +58,16 @@ export const authApi = createApi({
                 Pragma: "no-cache",
                 Expires: 0,
             }),
+            providesTags: ['Auth'],
         }),
 
-        logout: builder.query({
-            query: () => 'logout',
-            
+        logout: builder.mutation({
+            query: () => ({
+                url: 'logout',
+                method: 'POST',
+            }),
+            invalidatesTags: ['Auth'],    
         }),
-                
     }),
 });
 
@@ -70,6 +79,6 @@ export const {
     useForgotPasswordMutation,
     useResetPasswordMutation,
     useIsLoggedInQuery,    
-    useLogoutQuery,
+    useLogoutMutation,
  } = authApi;
 

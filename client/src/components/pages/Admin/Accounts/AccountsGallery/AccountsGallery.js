@@ -7,7 +7,6 @@ const AccountsGallery = (props) => {
         <div className={styles.container}>
             <div className={styles.gallery}>
                 {props.accounts.map((account) => (
-                    console.log(account),
                     <AccountsCard
                         key={account._id}
                         id={account._id}

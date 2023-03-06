@@ -13,7 +13,7 @@ const getAccounts = asyncHandler(async (req, res) => {
 // @route   GET /api/accounts/:id
 // @access  Private/Admin
 const getAccountById = asyncHandler(async (req, res) => {
-    const account = await Account.findById(req.params.id);
+    const account = await Account.findById(req.params.id).populate('platformAccounts.platform');
 
     if (account) {
         res.json(account);
@@ -70,14 +70,14 @@ const updateAccount = asyncHandler(async (req, res) => {
 // @route   POST /api/accounts
 // @access  Private/Admin
 const createAccount = asyncHandler(async (req, res) => {
-    const { username, email, password, role, birthdate, platformAccounts } = req.body;
+    const { username, email, password, role, birthdate } = req.body;
 
-    if ( !username || !email || !password || !role || !birthdate || !platformAccounts ) {
+    if ( !username || !email || !password || !role || !birthdate ) {
         res.status(400);
         throw new Error('Please fill in all fields');
     }
 
-    const accountExists = await Accounts.findOne({ email });
+    const accountExists = await Account.findOne({ email });
 
     if (accountExists) {
         res.status(400);
@@ -90,7 +90,6 @@ const createAccount = asyncHandler(async (req, res) => {
         password,
         role,
         birthdate,
-        platformAccounts,
     });
 
     if (account) {
@@ -100,7 +99,6 @@ const createAccount = asyncHandler(async (req, res) => {
             email: account.email,
             role: account.role,
             birthdate: account.birthdate,
-            platformAccounts: account.platformAccounts,
         });
     } else {
         res.status(400);

@@ -1,14 +1,11 @@
 const asyncHandler = require('express-async-handler');
 const Note = require('../models/noteModel');
-const multer = require('multer');
-const path = require('path');
-const { v4: uuidv4 } = require('uuid');
 
 // @desc    Get all notes
 // @route   GET /api/notes
 // @access  Public
 const getNotes = asyncHandler(async (req, res) => {
-    const notes = await Note.find({});
+    const notes = await Note.find({}).populate('account') || [];
 
     res.json(notes);
 });

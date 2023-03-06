@@ -1,16 +1,16 @@
 import React from 'react';
-import styles from './AccountDetails.module.css';
+import styles from './Me.module.css';
 import { Form, Formik } from 'formik';
 import { accountDetailsSchema } from '../../../../schemas/accountDetailsSchema';
 import InputField from '../../../common/InputField/InputField';
 import Button from '../../../common/Button/Button';
 
 /* 
-    AccountDetails component
+    Me component
     Displays a form to edit account details
 */
 
-const AccountDetails = () => {
+const Me = () => {
     const [ editMode, setEditMode ] = React.useState(false);
 
     return (
@@ -65,4 +65,4 @@ const AccountDetails = () => {
     );
 };
 
-export default AccountDetails;
+export default Me;

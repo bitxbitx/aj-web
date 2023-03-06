@@ -10,7 +10,6 @@ const LoginForm = (props) => {
   const [login, { error }] = useLoginMutation();
   const history = useHistory();
 
-  // TODO : Error handling
   return (
     <>
         <Formik
@@ -21,8 +20,10 @@ const LoginForm = (props) => {
           validationSchema={loginSchema}
           onSubmit={(values, { setSubmitting }) => {
             login(values).then((res) => {
+              console.log("res", res)
               if ( res.data.role === "admin" ) history.push("/admin")
-              else if ( res.data.role === "customer" ) history.push("/customer")
+              else if ( res.data.role === "staff" ) history.push("/admin")
+              else if ( res.data.role === "user" ) history.push("/customer")
               
             }, setSubmitting(false));
           }}
