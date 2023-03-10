@@ -1,7 +1,7 @@
 .field{
     display: flex;
     flex-direction: column;
-    margin-bottom: 1rem;
+    /* margin-bottom: 1rem; */
 }
 
 .field label{
@@ -9,6 +9,7 @@
     font-weight: 600;
     color: #000000DE;
     margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
 }
 
 .field input{
@@ -39,7 +40,7 @@
     color: #CC6577;
     font-size: 0.75rem;
     font-weight: 400;
-    margin-top: 0.5rem;
+    /* margin-top: 0.5rem; */
 }
 
 .field input:disabled{

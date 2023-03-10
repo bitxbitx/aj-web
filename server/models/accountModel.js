@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const bcrypt = require('bcrypt');
-const Platform = require('./platformModel');
 
 const accountSchema = new Schema(
     {

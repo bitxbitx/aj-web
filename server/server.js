@@ -26,6 +26,7 @@ app.use('/api/auth', require('./routes/authRoutes'))
 app.use('/api/notes', require('./routes/noteRoutes'))
 app.use('/api/platforms', require('./routes/platformRoutes'))
 app.use('/api/accounts', require('./routes/accountRoutes'))
+app.use('/api/results', require('./routes/resultRoutes'))
 
 // TODO : think if i can make this better
 app.get('/file/assets/:fileName', function (req, res) {

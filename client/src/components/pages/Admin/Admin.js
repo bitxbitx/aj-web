@@ -8,6 +8,8 @@ import Birthdays from "./Birthdays/Birthdays";
 import Accounts from "./Accounts/Accounts";
 import AddAccount from "./AddAccount/AddAccount";
 import AccountDetails from "./Accounts/AccountDetails/AccountDetails";
+import AddResult from "./AddResult/AddResult";
+import Results from "./Results/Results";
 import { useLogoutMutation } from "../../../feature/services/auth";
 
 const Admin = () => {
@@ -23,6 +25,10 @@ const Admin = () => {
                         <SubMenu label="Accounts">
                             <MenuItem component={<Link to="/admin/accounts" />}>All Accounts</MenuItem>
                             <MenuItem component={<Link to="/admin/add-accounts" />}>Add Account</MenuItem>
+                        </SubMenu>
+                        <SubMenu label="Results">
+                            <MenuItem component={<Link to="/admin/results" />}>All Results</MenuItem>
+                            <MenuItem component={<Link to="/admin/add-result" />}>Add Result</MenuItem>
                         </SubMenu>
                         <MenuItem component={<Link to="/admin/notes" />}>Notes</MenuItem>
                         <MenuItem component={<Link to="/admin/birthdays" />}>Birthdays</MenuItem>
@@ -42,8 +48,20 @@ const Admin = () => {
                     <Route path="/admin/add-accounts">
                         <AddAccount />
                     </Route>
+                    <Route path="/admin/results">
+                        <Results />
+                    </Route>
+                    <Route path="/admin/add-result">
+                        <AddResult />
+                    </Route>
+                    <Route path="/admin/results/:id">
+                        {/* <AccountDetails /> */}
+                    </Route>                    
                     <Route path="/admin/notes">
                         <Notes />
+                    </Route>
+                    <Route path="/admin/add-result">
+                        <AddResult />
                     </Route>
                     <Route path="/admin/birthdays">
                         <Birthdays />

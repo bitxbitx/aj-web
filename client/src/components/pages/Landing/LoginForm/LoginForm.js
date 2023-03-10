@@ -33,7 +33,7 @@ const LoginForm = (props) => {
               <InputField label="Username" type="text" name="username" />
               <InputField label="Password" type="password" name="password" />
               {error && <p className="error">{error.data.message}</p>}
-              <Button type="submit" disabled={isSubmitting} label="Login" />
+              <Button type="submit" vertMargin="20px" disabled={isSubmitting} label="Login" />
             </Form>
           )}
         </Formik>

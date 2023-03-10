@@ -15,7 +15,7 @@ const {
 
 router.route('/login').post(login);
 router.route('/register').post(register);
-router.route('/profile').get(protect, getProfile).put(protect, updateProfile);
+router.route('/me').get(protect, getProfile).put(protect, updateProfile);
 router.route('/:id').delete(protect, deleteAccount);
 router.route('/refresh-token').get(protect, getNewAccessToken);
 router.route('/logout').post(protect, logout);

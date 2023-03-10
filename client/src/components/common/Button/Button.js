@@ -2,6 +2,9 @@ import React from "react";
 import styles from "./Button.module.css";
 
 const Button = (props) => {
+  console.log(props.vertMargin || props.horMargin
+    ? (props.vertMargin ? props.vertMargin : "0px") + " " + props.horMargin
+    : "auto")
   return (
     <div className={`${styles.btn} ${props.className}`}>
       <button
@@ -12,7 +15,7 @@ const Button = (props) => {
           height: `${props.height ? props.height : "50px"}`,
           margin: `${
             props.vertMargin || props.horMargin
-              ? (props.vertMargin ? props.vertMargin : "0px") + " " + props.horMargin
+              ? (props.vertMargin ? props.vertMargin : "0px") + " " + (props.horMargin ? props.horMargin : "0px")
               : "auto"
           }`,
           fontWeight: `${props.fontWeight ? props.fontWeight : "600"}`
