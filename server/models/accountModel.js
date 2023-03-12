@@ -74,13 +74,6 @@ accountSchema.pre('save', async function (next) {
         const salt = await bcrypt.genSalt(8);
         account.password = await bcrypt.hash(account.password, salt);
     }
-
-    account.totalbalance = 0;
-
-    account.platformAccounts.forEach((platformAccount) => {
-        account.totalbalance += platformAccount.balance;
-    })
-
     next();
 })
 

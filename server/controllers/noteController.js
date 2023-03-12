@@ -15,7 +15,7 @@ const getNotes = asyncHandler(async (req, res) => {
 // @route   GET /api/notes/:id
 // @access  Public
 const getNoteById = asyncHandler(async (req, res) => {
-    const note = await Note.findById(req.params.id);
+    const note = await Note.findById(req.params.id).populate('account');
 
     if (note) {
         res.json(note);
@@ -54,6 +54,40 @@ const updateNote = asyncHandler(async (req, res) => {
     const note = await Note.findById(req.params.id);
 
     if (note) {
+
+        /* Finding the account that is associated with the note. */
+        const account = await Account.findById(note.account).populate('platformAccounts.platform');
+
+        // if approved, update account and platformAccounts affected 
+        if (req.body.status === "approved") {     
+                   
+            // Loop through the platformAccounts array to deduct the amount from the platformAccounts if balance is enough
+            let totalAmountToDeduct = note.amount;
+            for (let i = 0; i < account.platformAccounts.length; i++) {
+                if (totalAmountToDeduct > 0) {
+                    if (account.platformAccounts[i].balance >= totalAmountToDeduct) {
+                        account.platformAccounts[i].balance -= totalAmountToDeduct;
+                        totalAmountToDeduct = 0;
+                    } else {
+                        totalAmountToDeduct -= account.platformAccounts[i].balance;
+                        account.platformAccounts[i].balance = 0;
+                    }
+                }
+            }
+
+            account.totalbalance -= note.amount;
+            note.remark = "Approved by admin";
+            await account.save();
+        }
+
+        // If rejected, add remark
+        if (req.body.status === "rejected") {
+            note.remark = "Rejected by admin";
+        }
+
+        /* A way to update the note. If the req.body.amount is not null, then it will update the
+        note.amount to the req.body.amount. If the req.body.amount is null, then it will update the
+        note.amount to the note.amount. */        
         note.amount = req.body.amount || note.amount;
         note.method = req.body.method || note.method;
         note.image = req.body.image || note.image;

@@ -134,10 +134,17 @@ const updateResult = asyncHandler(async (req, res) => {
 
         // Update account balance if there is a difference between the old and new amount
         if (result.amount !== req.body.amount) {
-            const platform = accountFound[0].platformAccounts.filter(x => x.platform.name == result.platform.name)[0];
-            platform.balance -= result.amount;
-            platform.balance += req.body.amount;
+            
+            // Check if account totalbalance is negative before updating
+            if (accountFound[0].totalBalance - (req.body.amount - result.amount) < 0) {
+                const platform = accountFound[0].platformAccounts.filter(x => x.platform.name == result.platform.name)[0];
+                platform.balance -= result.amount;
+                platform.balance += req.body.amount;
+            } else {
+                accountFound[0].totalBalance -= (req.body.amount - result.amount);
+            }
         }
+
 
         /* Updating the result. */
         result.amount = req.body.amount || result.amount;

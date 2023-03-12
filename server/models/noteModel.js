@@ -30,7 +30,11 @@ const noteSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'Account',
             required: true
-        }
+        },
+        remark: {
+            type: String,
+            trim: true,
+        },
     },
     {
         timestamps: true,
