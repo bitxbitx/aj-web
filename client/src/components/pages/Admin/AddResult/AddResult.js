@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./AddResult.module.css";
 import { Form, Formik } from "formik";
-import { addResultSchema } from "../../../../schemas/addResultSchema";
+import { resultSchema } from "../../../../schemas/resultSchema";
 import InputField from "../../../common/InputField/InputField";
 import Button from "../../../common/Button/Button";
 import { useCreateMultipleResultsMutation } from "../../../../feature/services/results";
@@ -18,7 +18,7 @@ const AddResult = () => {
         const { results } = values;
         await createMultipleResults(results)
             .unwrap()
-            .then(() => {
+            .then((res) => {
                 history.push("/admin/results");
             }
             );
@@ -33,7 +33,7 @@ const AddResult = () => {
             ) : (
                 <Formik
                     initialValues={{ results: [{ amount: "", account: "", platform: "" }] }}
-                    validationSchema={addResultSchema}
+                    validationSchema={resultSchema}
                     onSubmit={handleSubmit}
                 >
                     {({ values, setFieldValue }) => (

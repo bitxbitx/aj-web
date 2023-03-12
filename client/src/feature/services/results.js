@@ -19,15 +19,15 @@ export const resultsApi = createApi({
                 url: id,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['Result'],
+            invalidatesTags: ['Result','Account'],
         }),
         updateResult: builder.mutation({
             query: (result) => ({
-                url: result._id,
+                url: result.id,
                 method: 'PUT',
                 body: result,
             }),
-            invalidatesTags: ['Result'],
+            invalidatesTags: ['Result','Account'],
         }),
         createResult: builder.mutation({
             query: (result) => ({
@@ -35,7 +35,7 @@ export const resultsApi = createApi({
                 method: 'POST',
                 body: result,
             }),
-            invalidatesTags: ['Result'],
+            invalidatesTags: ['Result','Account'],
         }),
         createMultipleResults: builder.mutation({
             query: (results) => ({
@@ -43,7 +43,7 @@ export const resultsApi = createApi({
                 method: 'POST',
                 body: results,
             }),
-            invalidatesTags: ['Result'],
+            invalidatesTags: ['Result','Account'],
         }),
     }),
 });

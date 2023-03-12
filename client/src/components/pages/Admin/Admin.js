@@ -10,6 +10,7 @@ import AddAccount from "./AddAccount/AddAccount";
 import AccountDetails from "./Accounts/AccountDetails/AccountDetails";
 import AddResult from "./AddResult/AddResult";
 import Results from "./Results/Results";
+import ResultDetails from "./Results/ResultDetails/ResultDetails";
 import { useLogoutMutation } from "../../../feature/services/auth";
 
 const Admin = () => {
@@ -54,8 +55,8 @@ const Admin = () => {
                     <Route path="/admin/add-result">
                         <AddResult />
                     </Route>
-                    <Route path="/admin/results/:id">
-                        {/* <AccountDetails /> */}
+                    <Route path="/admin/result/:id">
+                        <ResultDetails />
                     </Route>                    
                     <Route path="/admin/notes">
                         <Notes />

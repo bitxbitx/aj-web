@@ -2,9 +2,6 @@ import React from "react";
 import styles from "./Button.module.css";
 
 const Button = (props) => {
-  console.log(props.vertMargin || props.horMargin
-    ? (props.vertMargin ? props.vertMargin : "0px") + " " + props.horMargin
-    : "auto")
   return (
     <div className={`${styles.btn} ${props.className}`}>
       <button

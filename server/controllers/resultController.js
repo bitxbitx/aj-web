@@ -1,12 +1,13 @@
 const asyncHandler = require('express-async-handler');
 const Result = require('../models/resultModel');
 const Account = require('../models/accountModel');
+const Platform = require('../models/platformModel');
 
 // @desc    Get all results
 // @route   GET /api/results
 // @access  Private/Admin
 const getResults = asyncHandler(async (req, res) => {
-    const results = await Result.find({});
+    const results = await Result.find({}).populate('account').populate('platform');
     res.json(results);
 });
 
@@ -28,10 +29,16 @@ const getResultById = asyncHandler(async (req, res) => {
 // @route   DELETE /api/results/:id
 // @access  Private/Admin
 const deleteResult = asyncHandler(async (req, res) => {
-    const result = await Result.findById(req.params.id);
+    const result = await Result.findById(req.params.id).populate('platform');
 
     if (result) {
+        // Update Platform affected inside account
+        const accountFound = await Account.findById(result.account._id).populate('platformAccounts.platform');
+        const platformAffected = accountFound.platformAccounts.filter(x => x.platform.name == result.platform.name)[0];
+        platformAffected.balance -= result.amount;
+        await accountFound.save();
         await result.remove();
+
         res.json({ message: 'Result removed' });
     } else {
         res.status(404);
@@ -58,7 +65,7 @@ const createResult = asyncHandler(async (req, res) => {
 
     const createdResult = await result.save();
 
-    const platformAffected = accountFound[0].platforms.filter(x=>x.platform == req.body.platform)[0];
+    const platformAffected = accountFound[0].platforms.filter(x => x.platform == req.body.platform)[0];
     platformAffected.amount += req.body.amount;
     await accountFound[0].save();
 
@@ -72,39 +79,38 @@ const createMultipleResults = asyncHandler(async (req, res) => {
     const failedResults = [];
     const successResults = [];
 
-    req.body.results.forEach(async (result) => {
-        const AccountFound = await Account.find({ username: result.account });
+    req.body.forEach(async (result) => {
 
-        if (AccountFound.length === 0) {
-            failedResults.push(result);
-        } else {
+        /* Finding the account and platform in the database. */
+        const accountFound = await Account.find({ username: result.account }).populate('platformAccounts.platform');
+        const platformFound = await Platform.find({ name: result.platform });
+
+        if (accountFound) {
+            /* Creating a new result and saving it to the database. */
             const newResult = new Result({
                 amount: result.amount,
-                account: AccountFound,
-                platform: result.platform,
+                account: accountFound[0],
+                platform: platformFound[0],
             });
-
             const createdResult = await newResult.save();
+
+            /* Updating the balance of the platformAccounts array in the account model. */
+            const platformAffected = accountFound[0].platformAccounts.filter(x => x.platform.name == result.platform)[0];
+            platformAffected.balance += result.amount;
+            console.log("platformAffected", platformAffected)
+            await accountFound[0].save();
             successResults.push(createdResult);
-
-            const platformAffected = AccountFound[0].platforms.filter(x=>x.platform == result.platform)[0];
-            platformAffected.amount += result.amount;
-            await AccountFound[0].save();
-        }
-
-        if (failedResults.length === req.body.results.length) {
-            res.status(404);
-            throw new Error('All results failed');
-        }
-
-        if (failedResults.length > 0) {
-            res.status(201).json({
-                successResults,
-                failedResults,
-            });
         } else {
-            res.status(201).json(successResults);
+            failedResults.push({
+                ...result,
+                error: 'Account not found',
+            });
         }
+
+        res.status(201).json({
+            successResults,
+            failedResults,
+        });
     });
 });
 
@@ -112,14 +118,35 @@ const createMultipleResults = asyncHandler(async (req, res) => {
 // @route   PUT /api/results/:id
 // @access  Private/Admin
 const updateResult = asyncHandler(async (req, res) => {
-    const result = await Result.findById(req.params.id);
+    const result = await Result.findById(req.params.id).populate('platform');
+    const accountFound = await Account.find({ username: req.body.account }).populate('platformAccounts.platform');
+    const platformFound = await Platform.find({ name: req.body.platform });
 
     if (result) {
-        result.amount = req.body.amount || result.amount;
-        result.account = req.body.account || result.account;
-        result.platform = req.body.platform || result.platform;
 
+        // Update platform balance if there is a difference between the old and new platform
+        if (result.platform.name !== req.body.platform) {
+            const oldPlatform = accountFound[0].platformAccounts.filter(x => x.platform.name == result.platform.name)[0];
+            const newPlatform = accountFound[0].platformAccounts.filter(x => x.platform.name == req.body.platform)[0];
+            oldPlatform.balance -= result.amount;
+            newPlatform.balance += result.amount;
+        }
+
+        // Update account balance if there is a difference between the old and new amount
+        if (result.amount !== req.body.amount) {
+            const platform = accountFound[0].platformAccounts.filter(x => x.platform.name == result.platform.name)[0];
+            platform.balance -= result.amount;
+            platform.balance += req.body.amount;
+        }
+
+        /* Updating the result. */
+        result.amount = req.body.amount || result.amount;
+        result.account = accountFound[0] || result.account;
+        result.platform = platformFound[0] || result.platform;
+        await accountFound[0].save();
         const updatedResult = await result.save();
+
+        /* Returning the updated result. */
         res.json({
             _id: updatedResult._id,
             amount: updatedResult.amount,

@@ -13,6 +13,9 @@ const ResultsGallery = (props) => {
                         amount={result.amount}
                         account={result.account}
                         platform={result.platform}
+                        createdAt={result.createdAt}
+                        updatedAt={result.updatedAt}
+                        resultNo={result.resultNo}
                     />
                 ))}
             </div>
