@@ -1,30 +1,9 @@
 import React from "react";
-import styles from "./NoteCard.module.css";
+import ModalImage from "react-modal-image";
+import { useHistory } from "react-router-dom";
 import { useUpdateNoteMutation } from "../../../../../../feature/services/note";
 import Button from '../../../../../common/Button/Button';
-import { useHistory } from "react-router-dom";
-import ModalImage from "react-modal-image";
-
-/*
-    NoteCard component
-    Displays a single note
-    
-    props: {
-        note: {
-            _id: string,
-            amount: number,
-            method: string,
-            image: string,
-            status: string,
-            account: {
-                _id: string,
-                username: string,
-                email: string,
-                role: string,
-            }
-        }
-    }
-*/
+import styles from "./NoteCard.module.css";
 
 const NoteCard = ({ note }) => {
     const [updateNote] = useUpdateNoteMutation();
@@ -53,8 +32,12 @@ const NoteCard = ({ note }) => {
                         <Button
                             label="Approve"
                             onClick={() => {
-                                note.status = "approved";
-                                updateNote(note)
+                                // Create new JSON object with status being different
+                                let payload = {
+                                    status: "approved",
+                                    id: note._id
+                                }
+                                updateNote(payload)
                                 history.push("/admin/notes")
                             }}
                         />

@@ -15,7 +15,8 @@ const Button = (props) => {
               ? (props.vertMargin ? props.vertMargin : "0px") + " " + (props.horMargin ? props.horMargin : "0px")
               : "auto"
           }`,
-          fontWeight: `${props.fontWeight ? props.fontWeight : "600"}`
+          fontWeight: `${props.fontWeight ? props.fontWeight : "600"}`,
+          marginTop: `${props.marginTop ? props.marginTop : "0px"}`,
         }}
         onClick={props.onClick}
         type = {props.type}

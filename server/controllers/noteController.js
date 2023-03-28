@@ -30,7 +30,6 @@ const getNoteById = asyncHandler(async (req, res) => {
 // @access  Private
 const createNote = asyncHandler(async (req, res) => {
     if (req.body.amount && req.body.method && req.file.filename) {
-        console.log("req.body", req.body);
         const note = new Note({
             amount: req.body.amount,
             method: req.body.method,

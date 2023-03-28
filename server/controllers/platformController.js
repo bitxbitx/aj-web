@@ -28,10 +28,10 @@ const getPlatformById = asyncHandler(async (req, res) => {
 // @route   POST /api/platforms
 // @access  Private
 const createPlatform = asyncHandler(async (req, res) => {
-    if ( req.body.name && req.body.icon ) {
+    if ( req.body.name && req.file.filename ) {
         const platform = new Platform({
             name: req.body.name,
-            icon: req.body.icon,
+            icon: req.file.filename,
         });
 
         const createdPlatform = await platform.save();
@@ -39,7 +39,7 @@ const createPlatform = asyncHandler(async (req, res) => {
     } else {
         res.status(400);
         throw new Error('Invalid platform data');
-    }
+    } 
 });
 
 // @desc    Update a platform
@@ -50,7 +50,7 @@ const updatePlatform = asyncHandler(async (req, res) => {
 
     if (platform) {
         platform.name = req.body.name || platform.name;
-        platform.icon = req.body.icon || platform.icon;
+        platform.icon = req.file?.filename || platform.icon;
 
         const updatedPlatform = await platform.save();
         res.json(updatedPlatform);

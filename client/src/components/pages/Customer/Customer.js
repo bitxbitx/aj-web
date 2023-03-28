@@ -1,9 +1,10 @@
 import React from "react";
+import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
+import { Link, Route, Switch } from "react-router-dom";
+import { useLogoutMutation } from "../../../feature/services/auth";
+import AccountDetails from "./AccountDetails/AccountDetails";
 import styles from "./Customer.module.css";
-import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { Switch, Route, Link } from "react-router-dom";
 import Dashboard from "./Dashboard/Dashboard";
-import AccountDetails from "./AccountDetails/AccountDetails";   
 
 /*
     Customer component
@@ -11,7 +12,8 @@ import AccountDetails from "./AccountDetails/AccountDetails";
 */
 
 const Customer = () => {
-    
+    const [logout] = useLogoutMutation();
+
     return (
         <div className={styles.container}>
             <div className={styles.sidebar}>
@@ -22,7 +24,7 @@ const Customer = () => {
                     <Menu iconShape="square">
                         <MenuItem component={<Link to="/customer/dashboard"/>}>Dashboard</MenuItem>
                         <MenuItem component={<Link to="/customer/account-details"/>}>Account Details</MenuItem>
-                        <MenuItem component={<Link to="/logout"/>}>Logout</MenuItem>
+                        <MenuItem onClick={() => logout()}>Logout</MenuItem>
                     </Menu>
                 </Sidebar>
             </div>
@@ -33,9 +35,6 @@ const Customer = () => {
                     </Route>
                     <Route path="/customer/account-details">
                         <AccountDetails />
-                    </Route>
-                    <Route path="/logout">
-                        <h1>Logout</h1>
                     </Route>
                 </Switch>
             </div>

@@ -27,7 +27,7 @@ export const authApi = createApi({
         }),
         updateProfile: builder.mutation({
             query: (profile) => ({
-                url: 'updateprofile',
+                url: 'me',
                 method: 'PUT',
                 body: profile,
             }),

@@ -94,10 +94,21 @@ const createMultipleResults = asyncHandler(async (req, res) => {
             });
             const createdResult = await newResult.save();
 
-            /* Updating the balance of the platformAccounts array in the account model. */
-            const platformAffected = accountFound[0].platformAccounts.filter(x => x.platform.name == result.platform)[0];
-            platformAffected.balance += result.amount;
-            console.log("platformAffected", platformAffected)
+            /* Check if the platform already exists in the account. */
+            const platformAlreadyExists = accountFound[0].platformAccounts.filter(x => x.platform.name == result.platform)[0];
+
+            /* If the platform already exists, update the balance. */
+            if (platformAlreadyExists) {
+                platformAlreadyExists.balance += result.amount;
+            } else {
+                /* If the platform doesn't exist, create a new one and add it to the account. */
+                const newPlatform = {
+                    platform: platformFound[0],
+                    balance: result.amount,
+                };
+                accountFound[0].platformAccounts.push(newPlatform);
+            }
+
             await accountFound[0].save();
             successResults.push(createdResult);
         } else {
@@ -134,17 +145,11 @@ const updateResult = asyncHandler(async (req, res) => {
 
         // Update account balance if there is a difference between the old and new amount
         if (result.amount !== req.body.amount) {
+            const platformAffected = accountFound[0].platformAccounts.filter(x => x.platform.name == req.body.platform)[0];
+            platformAffected.balance -= result.amount;
+            platformAffected.balance += req.body.amount;
             
-            // Check if account totalbalance is negative before updating
-            if (accountFound[0].totalBalance - (req.body.amount - result.amount) < 0) {
-                const platform = accountFound[0].platformAccounts.filter(x => x.platform.name == result.platform.name)[0];
-                platform.balance -= result.amount;
-                platform.balance += req.body.amount;
-            } else {
-                accountFound[0].totalBalance -= (req.body.amount - result.amount);
-            }
         }
-
 
         /* Updating the result. */
         result.amount = req.body.amount || result.amount;

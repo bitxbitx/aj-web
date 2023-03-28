@@ -1,17 +1,18 @@
 import React from "react";
-import styles from "./Admin.module.css";
-import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
-import { Switch, Route, Link } from "react-router-dom";
-import Notes from "./Notes/Notes";
-import Me from "./Me/Me";
-import Birthdays from "./Birthdays/Birthdays";
+import { Menu, MenuItem, Sidebar, SubMenu } from "react-pro-sidebar";
+import { Link, Route, Switch } from "react-router-dom";
+import { useLogoutMutation } from "../../../feature/services/auth";
+import AccountDetails from "./Accounts/AccountDetails/AccountDetails";
 import Accounts from "./Accounts/Accounts";
 import AddAccount from "./AddAccount/AddAccount";
-import AccountDetails from "./Accounts/AccountDetails/AccountDetails";
 import AddResult from "./AddResult/AddResult";
-import Results from "./Results/Results";
+import styles from "./Admin.module.css";
+import Birthdays from "./Birthdays/Birthdays";
+import Me from "./Me/Me";
+import Notes from "./Notes/Notes";
+import Platforms from "./Platforms/Platforms";
 import ResultDetails from "./Results/ResultDetails/ResultDetails";
-import { useLogoutMutation } from "../../../feature/services/auth";
+import Results from "./Results/Results";
 
 const Admin = () => {
     const [logout] = useLogoutMutation();
@@ -32,6 +33,7 @@ const Admin = () => {
                             <MenuItem component={<Link to="/admin/add-result" />}>Add Result</MenuItem>
                         </SubMenu>
                         <MenuItem component={<Link to="/admin/notes" />}>Notes</MenuItem>
+                        <MenuItem component={<Link to="/admin/platforms" />}>Platforms</MenuItem>
                         <MenuItem component={<Link to="/admin/birthdays" />}>Birthdays</MenuItem>
                         <MenuItem component={<Link to="/admin/me" />}>Account Details</MenuItem>
                         <MenuItem onClick={() => logout()}>Logout</MenuItem>
@@ -61,6 +63,9 @@ const Admin = () => {
                     <Route path="/admin/notes">
                         <Notes />
                     </Route>
+                    <Route path="/admin/platforms">
+                        <Platforms />
+                    </Route>
                     <Route path="/admin/add-result">
                         <AddResult />
                     </Route>
@@ -69,10 +74,6 @@ const Admin = () => {
                     </Route>
                     <Route path="/admin/me">
                         <Me />
-                    </Route>
-                    <Route path="/logout">
-                        { 
-                            }
                     </Route>
                 </Switch>
             </div>

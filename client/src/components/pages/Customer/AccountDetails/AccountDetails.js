@@ -4,6 +4,9 @@ import { Form, Formik } from 'formik';
 import { accountDetailsSchema } from '../../../../schemas/accountDetailsSchema';
 import InputField from '../../../common/InputField/InputField';
 import Button from '../../../common/Button/Button';
+import { useGetMeQuery } from '../../../../feature/services/auth';
+import BounceLoader from 'react-spinners/BounceLoader';
+import { useUpdateProfileMutation } from '../../../../feature/services/auth';
 
 /* 
     AccountDetails component
@@ -11,57 +14,89 @@ import Button from '../../../common/Button/Button';
 */
 
 const AccountDetails = () => {
-    const [ editMode, setEditMode ] = React.useState(false);
-
+    const [editMode, setEditMode] = React.useState(false);
+    const [updateAccount] = useUpdateProfileMutation();
+    const { data, isLoading } = useGetMeQuery();
 
     return (
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1>Account Details</h1>
-                <Button 
+                <Button
                     btnColor={editMode ? '#CC6577' : '#484B6A'}
                     label={editMode ? 'Cancel' : 'Edit'}
                     onClick={() => setEditMode(!editMode)}
                 />
             </div>
-            <Formik
-                initialValues={{
-                    name: '',
-                    birthday: ''
-                }}
-                validationSchema={accountDetailsSchema}
-                onSubmit={(values) => {
-                    console.log(values);
-                }}
-            >
-                {({ values, errors, touched, handleChange, handleBlur }) => (
-                    <Form>
-                        <InputField
-                            label="Name"
-                            name="name"
-                            type="text"
-                            value={values.name}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={errors.name}
-                            touched={touched.name}
-                            disabled={!editMode}
-                        />
-                        <InputField
-                            label="Birthday"
-                            name="birthday"
-                            type="date"
-                            value={values.birthday}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={errors.birthday}
-                            touched={touched.birthday}
-                            disabled={!editMode}
-                        />
-                        {editMode && <Button label="Save" type="submit" />}
-                    </Form>
-                )}
-            </Formik>
+            {isLoading ? (
+                <div className={styles.loader}>
+                    <BounceLoader color="#484B6A" />
+                </div>
+            ) : (
+                <Formik
+                    initialValues={{
+                        username: data?.username || '',
+                        email: data?.email || '',
+                        changePassword: '',
+                        confirmPassword: '',
+                        birthdate: data?.birthdate.substring(0, 10) || ''
+                    }}
+                    validationSchema={accountDetailsSchema}
+                    onSubmit={async (values, { setErrors }) => {
+                        try {
+                            await updateAccount({id: data._id, ...values});
+                            setEditMode(false);
+                        } catch (err) {
+                            setErrors(err);
+                        }
+                    }}
+                >
+                    {({ isSubmitting }) => (
+                        <Form className={styles.form}>
+                            <InputField
+                                name="username"
+                                label="Username"
+                                type="text"
+                                disabled={true}
+                            />
+                            <InputField
+                                name="email"
+                                label="Email"
+                                type="email"
+                                disabled={true}
+                            />
+                            <InputField
+                                name="changePassword"
+                                label="Change Password"
+                                type="password"
+                                disabled={!editMode}
+                            />
+                            <InputField
+                                name="confirmPassword"
+                                label="Confirm Password"
+                                type="password"
+                                disabled={!editMode}
+                            />
+                            <InputField
+                                name="birthdate"
+                                label="Birthdate"
+                                type="date"
+                                disabled={!editMode}
+                            />
+                            { editMode && (
+                                <Button
+                                btnColor="#484B6A"
+                                label="Save"
+                                type="submit"
+                                marginTop="1rem"
+                                disabled={!editMode || isSubmitting}
+                            />
+                            )}
+                        </Form>
+                    )}
+                </Formik>
+            )
+            }
         </div>
     );
 };

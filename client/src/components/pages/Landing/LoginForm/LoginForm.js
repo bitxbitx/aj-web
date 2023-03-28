@@ -23,7 +23,7 @@ const LoginForm = (props) => {
               console.log("res", res)
               if ( res.data.role === "admin" ) history.push("/admin")
               else if ( res.data.role === "staff" ) history.push("/admin")
-              else if ( res.data.role === "user" ) history.push("/customer")
+              else if ( res.data.role === "customer" ) history.push("/customer")
               
             }, setSubmitting(false));
           }}
@@ -33,7 +33,7 @@ const LoginForm = (props) => {
               <InputField label="Username" type="text" name="username" />
               <InputField label="Password" type="password" name="password" />
               {error && <p className="error">{error.data.message}</p>}
-              <Button type="submit" vertMargin="20px" disabled={isSubmitting} label="Login" />
+              <Button type="submit" marginTop="20px" disabled={isSubmitting} label="Login" />
             </Form>
           )}
         </Formik>

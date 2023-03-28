@@ -12,9 +12,12 @@ import { useHistory } from "react-router-dom";
 
 const Landing = () => {
     const { data } = useIsLoggedInQuery();
+    console.log("data: ", data)
     const isLoggedIn = data?.isLoggedIn || false;
-    const role = data?.role || "";
+    const role = data?.user.role || "";
     const history = useHistory();
+    console.log("Landing: ", isLoggedIn, role)
+    
     return (
         <>
             {

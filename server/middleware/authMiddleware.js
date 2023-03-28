@@ -6,6 +6,7 @@ const protect = async (req, res, next) => {
     const { accessToken, refreshToken } = req.cookies;
 
     if (!accessToken && !refreshToken) {
+        console.log('no token')
         res.status(401);
         next(createError.Unauthorized('Not authorized, no token'));
     }
@@ -14,14 +15,15 @@ const protect = async (req, res, next) => {
         req.userId = userId;
         next();
     }).catch( async error => {
-        await verifyRefreshToken(refreshToken).then( async userId => {
-            if (!userId) {
+        await verifyRefreshToken(refreshToken).then( async vrtUserID => {
+            if (!vrtUserID) {
+                console.log('vrt user id failed')
                 res.status(401);
                 next(createError.Unauthorized('Not authorized, no token'));
             }
 
-            const accessToken = await signAccessToken(userId);
-            const refreshToken = await signRefreshToken(userId);
+            const accessToken = await signAccessToken(vrtUserID);
+            const refreshToken = await signRefreshToken(vrtUserID);
 
             res
             .cookie('refreshToken', refreshToken, {
@@ -34,9 +36,11 @@ const protect = async (req, res, next) => {
                 path: '/',
                 maxAge: 15 * 60 * 1000 // 15 minutes
             })
-            req.userId = userId;
+            req.userId = vrtUserID;
             next();
+
         }).catch( error => {
+            console.log('vrt failed')
             res.status(401);
             next(createError.Unauthorized('Not authorized, token failed'));
         })

@@ -1,15 +1,14 @@
-import React from "react";
-import styles from "./AccountDetails.module.css";
-import { useGetAccountByIdQuery, useDeleteAccountMutation, useUpdateAccountMutation } from "../../../../../feature/services/accounts";
-import { useParams } from "react-router-dom";
-import BounceLoader from "react-spinners/BounceLoader";
-import { Form, Formik, FieldArray } from "formik";
-import InputField from "../../../../common/InputField/InputField";
-import Button from "../../../../common/Button/Button";
-import SelectField from "../../../../common/SelectField/SelectField";
 import { Divider } from "@mui/material";
-import { useHistory } from "react-router-dom";
+import { FieldArray, Form, Formik } from "formik";
+import React from "react";
+import { useHistory, useParams } from "react-router-dom";
+import BounceLoader from "react-spinners/BounceLoader";
+import { useDeleteAccountMutation, useGetAccountByIdQuery, useUpdateAccountMutation } from "../../../../../feature/services/accounts";
 import { useGetPlatformsQuery } from "../../../../../feature/services/platform";
+import Button from "../../../../common/Button/Button";
+import InputField from "../../../../common/InputField/InputField";
+import SelectField from "../../../../common/SelectField/SelectField";
+import styles from "./AccountDetails.module.css";
 
 const AccountDetails = () => {
     const { id } = useParams();
@@ -17,7 +16,7 @@ const AccountDetails = () => {
     const [deleteAccount] = useDeleteAccountMutation();
     const [updateAccount] = useUpdateAccountMutation();
     const { data: platforms } = useGetPlatformsQuery();
-    const [ platform, setPlatform ] = React.useState("");
+    const [platform, setPlatform] = React.useState("");
     const history = useHistory();
 
     return (
@@ -96,28 +95,44 @@ const AccountDetails = () => {
                                 render={arrayHelpers => (
                                     <>
                                         <div className={styles.platform__info__toolbar}>
-                                            <SelectField label="Platform" name="platforms" value={platform}>
+                                            <SelectField label="Platform" name="platforms" value={platform} onChange={
+                                                (e) => {
+                                                    setPlatform(e.target.value);
+                                                }
+                                            }>
                                                 {platforms.map((platform, index) => (
                                                     <option key={index} value={platform.name}>{platform.name}</option>
                                                 ))}
                                             </SelectField>
                                             <Button
                                                 label="Add Platform"
+                                                type="button"
                                                 onClick={() => {
+                                                    console.log("platform", platform)
+                                                    if (platform === "") {
+                                                        alert("Please select a platform");
+                                                        return;
+                                                    }
+                                                    if (arrayHelpers.form.values.platformAccounts.find((el) => el.platform.name === platform)) {
+                                                        alert("Platform already exists");
+                                                        return;
+                                                    }
                                                     arrayHelpers.push({
-                                                        platform: {
-                                                            name: "",
-                                                        },
+                                                        platform: platforms.find((el) => el.name === platform),
                                                         balance: 0,
                                                     });
+                                                    console.log(arrayHelpers.form.values.platformAccounts)
+                                                    console.log("data.platformAccounts", data.platformAccounts)
+                                                    console.log("Filter", platforms.find((el) => el.name === platform))
                                                 }}
                                             />
                                         </div>
                                         <div className={styles.platform__info__content}>
 
-                                            {data.platformAccounts.map((platformAccount, index) => (
+                                            {arrayHelpers.form.values.platformAccounts.map((platformAccount, index) => (
                                                 <div className={styles.platform__info__content__card} key={index}>
                                                     <div className={styles.platform__info__content__card__header}>
+                                                        <img src={`http://localhost:8000/file/assets/${platformAccount.platform.icon}`} alt={platformAccount.platform.name} className={styles.icon} />
                                                         {platformAccount.platform.name}
                                                     </div>
                                                     <InputField

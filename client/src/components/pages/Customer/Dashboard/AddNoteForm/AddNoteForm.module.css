@@ -1,7 +1,7 @@
 .dropzone {
     border-radius: 10px;
     background: #D2D3DB;
-    min-height: 150px;
+    min-height: 50px;
     padding: 54px 54px;
     text-align: center;
     color: #484B6A99;
@@ -9,4 +9,5 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 20px;
 }

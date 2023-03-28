@@ -11,18 +11,18 @@ export const platformApi = createApi({
             providesTags: ['Platform'],
         }),
         addPlatform: builder.mutation({
-            query: (note) => ({
+            query: (platform) => ({
                 url: '',
                 method: 'POST',
-                body: note,
+                body: platform,
             }),
             invalidatesTags: ['Platform'],
         }),
         updatePlatform: builder.mutation({
-            query: (note) => ({
-                url: `/${note.id}`,
+            query: ({platform, id}) => ({
+                url: `/${id}`,
                 method: 'PUT',
-                body: note,
+                body: platform,
             }),
             invalidatesTags: ['Platform'],
         }),

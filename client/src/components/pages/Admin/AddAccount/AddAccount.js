@@ -18,11 +18,11 @@ const AddAccount = () => {
             <h1 className={styles.title}>Add Account</h1>
             <Formik
                 initialValues={{
-                    username: "testaccount",
-                    email: "cookiecouple123@live.com",
-                    password: "Sn1234",
-                    confirmPassword: "Sn1234",
-                    role: "customer",
+                    username: "",
+                    email: "",
+                    password: "",
+                    confirmPassword: "",
+                    role: "",
                     birthdate: "",
                 }}
                 validationSchema={createAccountSchema}

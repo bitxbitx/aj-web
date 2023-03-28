@@ -3,6 +3,7 @@ import styles from "./ResultsGallery.module.css";
 import ResultsCard from "./ResultsCard/ResultsCard";
 
 const ResultsGallery = (props) => {
+
     return (
         <div className={styles.container}>
             <div className={styles.gallery}>

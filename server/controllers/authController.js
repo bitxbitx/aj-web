@@ -92,7 +92,7 @@ const register = asyncHandler(async (req, res) => {
 // @route   GET /api/auth/profile
 // @access  Private
 const getProfile = asyncHandler(async (req, res) => {
-    const account = await Account.findById(req.userId).populate('platformAccounts');
+    const account = await Account.findById(req.userId).populate('platformAccounts.platform');
 
     if (account) {
         res.json({
@@ -214,15 +214,11 @@ const isLoggedIn = asyncHandler(async (req, res) => {
     /* This is checking if the user has a valid access token and refresh token. If they don't, then
     they are not logged in. */
     if (!accessToken && !refreshToken) {
-        res.status(200).json(
-            {
-                isLoggedIn: false,
-                message: 'No access token or refresh token'
-            }
-        )
+        res.status(403);
         throw new Error('No access token or refresh token');
     }
 
+    console.log("Im here 2")
     try {
         const decoded = await verifyAccessToken(accessToken);
         const account = await Account.findById(decoded).populate('platformAccounts');

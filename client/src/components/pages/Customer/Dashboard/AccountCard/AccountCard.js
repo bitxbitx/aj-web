@@ -6,7 +6,7 @@ const AccountCard = (props) => {
     return (
         <div className={styles.container}>
             <div className={styles.icon__container}>
-                <img src={props.icon} alt="icon" className={styles.icon} />
+            <img src={`http://localhost:8000/file/assets/${props.platform.icon}`} alt={props.platform.name} className={styles.icon}/>
             </div>
             <div className={styles.balance__container}>
                 <h2 className={styles.balance__label}>Balance</h2>

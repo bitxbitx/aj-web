@@ -38,6 +38,7 @@ app.get('/file/notes/:fileName', function (req, res) {
     const filePath = path.join(__dirname, 'uploads/notes', req.params.fileName);
     res.sendFile(filePath);
 });
+
 app.use(errorHandler)
 
 app.listen(port, () => console.log(`Server started on port ${port}`))
