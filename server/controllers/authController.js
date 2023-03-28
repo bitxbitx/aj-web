@@ -257,7 +257,7 @@ const isLoggedIn = asyncHandler(async (req, res) => {
                     });
             }
         } catch (error) {
-            res.status(200).json(
+            res.status(400).json(
                 {
                     isLoggedIn: false,
                     message: 'token is not valid',
