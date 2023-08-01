@@ -1,21 +1,16 @@
 import React from 'react';
 import styles from './Me.module.css';
 import { Form, Formik } from 'formik';
-import { accountDetailsSchema } from '../../../../schemas/accountDetailsSchema';
 import InputField from '../../../common/InputField/InputField';
 import Button from '../../../common/Button/Button';
 import { useGetMeQuery } from '../../../../feature/services/auth';
 import BounceLoader from 'react-spinners/BounceLoader';
 
-
-/* 
-    Me component
-    Displays a form to edit account details
-*/
-
 const Me = () => {
     const [editMode, setEditMode] = React.useState(false);
     const { data, isLoading } = useGetMeQuery();
+
+    console.log("Data from Me.js", data)
 
     return (
         <div className={styles.container}>
@@ -32,13 +27,12 @@ const Me = () => {
             ) : (
                 <Formik
                     initialValues={{
-                        username: data.username,
-                        email: data.email,
-                        birthdate: data.birthdate.substring(0, 10),
+                        username: data.account.username,
+                        email: data.account.email,
+                        birthday: data.account.birthday?.substring(0, 10) || '',
                         password: '',
                         confirmPassword: ''
                     }}
-                    validationSchema={accountDetailsSchema}
                     onSubmit={(values) => {
                         console.log(values);
                     }}
@@ -57,26 +51,15 @@ const Me = () => {
                                 disabled={!editMode}
                             />
                             <InputField
-                                label="Email"
-                                name="email"
-                                type="email"
-                                value={values.email}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={errors.email}
-                                touched={touched.email}
-                                disabled={!editMode}
-                            />
-                            <InputField
-                                label="Birthdate"
-                                name="birthdate"
+                                label="Birthday"
+                                name="birthday"
                                 type="date"
-                                value={values.birthdate}
+                                value={values.birthday}
                                 onChange={handleChange}
 
                                 onBlur={handleBlur}
-                                error={errors.birthdate}
-                                touched={touched.birthdate}
+                                error={errors.birthday}
+                                touched={touched.birthday}
                                 disabled={!editMode}
                             />
                             <InputField

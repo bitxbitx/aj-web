@@ -16,6 +16,8 @@ const Birthdays = () => {
         console.log(date)
     }
 
+    console.log("data", data)
+
     return (
         <>
             {isLoading ? (
@@ -33,8 +35,8 @@ const Birthdays = () => {
                             tileClassName={({ date, view }) => {
                                 if (view === 'month') {
                                     // Check if a date React-Calendar wants to check is on the list of dates to add class to
-                                    const found = data.find((account) => {
-                                        const accountDate = new Date(account.birthdate);
+                                    const found = data.accounts.find((account) => {
+                                        const accountDate = new Date(account.birthday);
                                         return accountDate.getDate() === date.getDate() && accountDate.getMonth() === date.getMonth();
                                     });
                                     if (found) {
@@ -49,8 +51,8 @@ const Birthdays = () => {
                     <div className={styles.birthday__container}>
                             {
                                 /* Check if the birthday is selected then map */
-                                data.map((account) => {
-                                    const accountDate = new Date(account.birthdate);
+                                data.accounts.map((account) => {
+                                    const accountDate = new Date(account.birthday);
                                     if (accountDate.getDate() === date.getDate() && accountDate.getMonth() === date.getMonth()) {
                                         return (
                                             <div className={styles.birthday__card} key={account._id}>

@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .title {
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+}
+
+.title {
+    display: flex;
+    align-items: center;
+}

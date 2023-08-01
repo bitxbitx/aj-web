@@ -3,7 +3,6 @@ import React from "react";
 import Dropzone from "react-dropzone";
 import ImageIcon from '../../../../../assets/icons/ImageIcon.svg';
 import { useAddNoteMutation } from "../../../../../feature/services/note";
-import { noteSchema } from "../../../../../schemas/noteSchema";
 import Button from "../../../../common/Button/Button";
 import InputField from "../../../../common/InputField/InputField";
 import SelectField from "../../../../common/SelectField/SelectField";
@@ -23,7 +22,6 @@ const AddNoteForm = () => {
                     method: "Cash",
                     image: null,
                 }}
-                validationSchema={noteSchema}
                 onSubmit={(values, { resetForm }) => {
                     let formData = new FormData();
                     formData.append('amount', values.name);

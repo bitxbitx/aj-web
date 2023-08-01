@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './AccountDetails.module.css';
 import { Form, Formik } from 'formik';
-import { accountDetailsSchema } from '../../../../schemas/accountDetailsSchema';
 import InputField from '../../../common/InputField/InputField';
 import Button from '../../../common/Button/Button';
 import { useGetMeQuery } from '../../../../feature/services/auth';
@@ -41,7 +40,6 @@ const AccountDetails = () => {
                         confirmPassword: '',
                         birthdate: data?.birthdate.substring(0, 10) || ''
                     }}
-                    validationSchema={accountDetailsSchema}
                     onSubmit={async (values, { setErrors }) => {
                         try {
                             await updateAccount({id: data._id, ...values});

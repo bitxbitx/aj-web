@@ -1,73 +1,88 @@
-// Import the necessary functions from the `@reduxjs/toolkit/query` library
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { fetchBaseQuery } from '@reduxjs/toolkit/query';
+import baseQueryWithAuth from '../common/baseQueryWithAuth';
 
-// Create a new API instance using `createApi`
+/**
+ * The API instance for interacting with the accounts resource.
+ */
 export const accountsApi = createApi({
-    // Set the `reducerPath` option to a string that identifies this API instance
+    /**
+     * A string that identifies this API instance within the Redux store.
+     */
     reducerPath: 'accountsApi',
 
-    // Set the `baseQuery` option to a `fetchBaseQuery` instance with a base URL and credentials
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/api/accounts/', credentials: 'include' }),
+    /**
+     * The base query function with authentication for making HTTP requests.
+     */
+    baseQuery: baseQueryWithAuth,
 
-    // Set the `tagTypes` option to an array of tag names that should be used for cache invalidation
+    /**
+     * An array of tag names used for cache invalidation.
+     */
     tagTypes: ['Account'],
 
-    // Define a set of endpoints using the `endpoints` option
+    /**
+     * Endpoints for interacting with the accounts resource.
+     */
     endpoints: (builder) => ({
-        // Define a query endpoint called `getAccounts` that returns a list of all accounts
+        /**
+         * Retrieves a list of all accounts.
+         * @returns {string} The endpoint URL for getting all accounts.
+         */
         getAccounts: builder.query({
-            // Set the `query` option to an empty string since no additional query parameters are needed
-            query: () => '',
-
-            // Set the `providesTags` option to an array with the `Account` tag name to invalidate cache when the data changes
+            query: () => '/accounts',
             providesTags: ['Account'],
         }),
 
-        // Define a query endpoint called `getAccountById` that returns a single account by ID
+        /**
+         * Retrieves a single account by ID.
+         * @param {string} id - The ID of the account to retrieve.
+         * @returns {string} The endpoint URL for getting an account by ID.
+         */
         getAccountById: builder.query({
-            // Set the `query` option to a function that takes an `id` parameter and returns the ID as a string
-            query: (id) => id,
-
-            // Set the `providesTags` option to an array with the `Account` tag name to invalidate cache when the data changes
+            query: (id) => `/accounts/${id}`,
             providesTags: ['Account'],
         }),
 
-        // Define a mutation endpoint called `deleteAccount` that deletes an account by ID
+        /**
+         * Deletes an account by ID.
+         * @param {string} id - The ID of the account to delete.
+         * @returns {Object} An object with the endpoint URL and HTTP method for deleting an account.
+         */
         deleteAccount: builder.mutation({
-            // Set the `query` option to a function that takes an `id` parameter and returns an object with a URL and HTTP method
             query: (id) => ({
-                url: id,
+                url: `/accounts/${id}`,
                 method: 'DELETE',
             }),
-
-            // Set the `invalidatesTags` option to an array with the `Account` tag name to invalidate cache after the mutation
             invalidatesTags: ['Account'],
         }),
 
-        // Define a mutation endpoint called `updateAccount` that updates an account by ID and data
+        /**
+         * Updates an account by ID and data.
+         * @param {Object} payload - The payload containing ID and account data to update.
+         * @param {string} payload.id - The ID of the account to update.
+         * @param {Object} payload.account - The updated account data.
+         * @returns {Object} An object with the endpoint URL, HTTP method, and request body for updating an account.
+         */
         updateAccount: builder.mutation({
-            // Set the `query` option to a function that takes an object with an `id` and `account` property and returns an object with a URL, HTTP method, and request body
-            query: ({ id, account }) => ({
-                url: id,
+            query: ({ id, ...rest }) => ({
+                url: `/accounts/${id}`,
                 method: 'PUT',
-                body: account,
+                body: rest,
             }),
-
-            // Set the `invalidatesTags` option to an array with the `Account` tag name to invalidate cache after the mutation
             invalidatesTags: ['Account'],
         }),
 
-        // Define a mutation endpoint called `createAccount` that creates a new account with the provided data
+        /**
+         * Creates a new account with the provided data.
+         * @param {Object} account - The account data for creating a new account.
+         * @returns {Object} An object with the endpoint URL, HTTP method, and request body for creating an account.
+         */
         createAccount: builder.mutation({
-            // Set the `query` option to a function that takes an `account` parameter and returns an object with a URL, HTTP method, and request body
             query: (account) => ({
-                url: '',
+                url: '/accounts',
                 method: 'POST',
                 body: account,
             }),
-
-            // Set the `invalidatesTags` option to an array with the `Account` tag name to invalidate cache after the mutation
             invalidatesTags: ['Account'],
         }),
     }),

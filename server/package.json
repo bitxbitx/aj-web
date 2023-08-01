@@ -14,7 +14,18 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.8.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+
+    "dayjs": "^1.10.7",
+    "lodash": "^4.17.21",
+    "nanoid": "^3.1.30",
+    "pino": "^7.0.2",
+    "pino-pretty": "^7.1.0",
+    "prom-client": "^14.0.0",
+    "response-time": "^2.3.2",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6",
+    "zod": "^3.9.8"
   },
   "devDependencies": {
     "morgan": "^1.10.0",

@@ -1,49 +1,18 @@
 import React from "react";
-import styles from "./Accounts.module.css";
-import { useGetAccountsQuery } from "../../../../feature/services/accounts";
-import AccountsGallery from "./AccountsGallery/AccountsGallery";
-import BounceLoader from "react-spinners/BounceLoader";
-import Button from "../../../common/Button/Button";
-import { useHistory, useParams } from "react-router-dom";
+import ContentTopBar from "../../../common/ContentTopBar/ContentTopBar";
+import { Route, Switch } from "react-router-dom";
+import AccountList from "./AccountList/AccountList";
+import AccountUpdate from "./AccountUpdate/AccountUpdate";
 
-const Accounts = () => {
-    const { data, error, isLoading } = useGetAccountsQuery();
-    const history = useHistory();
-    const [searchVal, setSearchVal] = React.useState("");
+export default function Accounts() {
 
-    return (
-        <div className={styles.account}>
-            <div className={styles.toolbar}>
-                <div className={styles.toolbar__left}>
-                    <Button label="Add Account" onClick={() => {
-                        history.push("/admin/add-accounts");
-                    }} />
-                </div>
-                <div className={styles.toolbar__right}>
-                    <input type="text" placeholder="Search" className={styles.searchBar} value={searchVal} onChange={(e) => {
-                        setSearchVal(e.target.value);
-                    }} />
-                </div>
-            </div>
-
-            <div className={styles.content}>
-                {isLoading ? (
-                    <div className={styles.loader}>
-                        <BounceLoader color="#484B6A" />
-                    </div>
-                ) : (
-                    <AccountsGallery accounts={data.filter((el) => {
-                        if ( el ){
-                            return el.username.match(new RegExp(searchVal, "i"))
-                        }
-
-                        return null;
-                    })
-                    } />
-                )}
-            </div>
-        </div>
-    );
+  return (
+    <>
+      <ContentTopBar title="Accounts" redirectLink="/admin/accounts/update"/>
+      <Switch>
+        <Route path="/admin/accounts/update/:id?"> <AccountUpdate /> </Route>
+        <Route path="/admin/accounts" exact> <AccountList/> </Route>
+      </Switch>
+    </>
+  );
 }
-
-export default Accounts;

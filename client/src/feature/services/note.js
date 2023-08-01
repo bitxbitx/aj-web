@@ -1,61 +1,84 @@
-/**
- * notesApi is a Redux Toolkit API slice that encapsulates API logic for CRUD operations for notes.
- *
- * It is built using the `createApi` function from the `@reduxjs/toolkit/query/react` and `@reduxjs/toolkit/query` packages.
- *
- * The API provides the following endpoints:
- * - getNotes: Retrieves a list of notes
- * - getNoteById: Retrieves a note by its ID
- * - addNote: Creates a new note
- * - updateNote: Updates an existing note
- * - deleteNote: Deletes a note
- *
- * @see https://redux-toolkit.js.org/rtk-query/usage/examples#basic-example
- */
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { fetchBaseQuery } from '@reduxjs/toolkit/query';
+import baseQueryWithAuth from '../common/baseQueryWithAuth';
 
+/**
+ * The API instance for handling CRUD operations for notes.
+ */
 export const notesApi = createApi({
-  // A name used to generate action types and base names for actions and selectors
+  /**
+   * A string that identifies this API instance within the Redux store.
+   */
   reducerPath: 'notesApi',
-  // The base query for all endpoints. Sets the baseUrl and credentials.
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000/api/notes', credentials: 'include' }),
-  // Defines a custom tag type to invalidate tags with the same type
+
+  /**
+   * The base query function with authentication for making HTTP requests.
+   */
+  baseQuery: baseQueryWithAuth,
+
+  /**
+   * An array of tag names used for cache invalidation.
+   */
   tagTypes: ['Note'],
-  // Defines endpoints for each operation with their respective methods and query parameters.
+
+  /**
+   * Endpoints for handling CRUD operations for notes.
+   */
   endpoints: (builder) => ({
-    // Queries all notes.
+    /**
+     * Retrieves a list of notes.
+     * @returns {string} The endpoint URL for getting the list of notes.
+     */
     getNotes: builder.query({
-      query: () => '',
+      query: () => '/notes',
       providesTags: ['Note'],
     }),
-    // Queries a single note by ID.
+
+    /**
+     * Retrieves a single note by its ID.
+     * @param {string} id - The ID of the note to retrieve.
+     * @returns {string} The endpoint URL for getting a single note by its ID.
+     */
     getNotesById: builder.query({
-      query: (id) => `/${id}`,
+      query: (id) => `/notes/${id}`,
       providesTags: ['Note'],
     }),
-    // Creates a new note.
+
+    /**
+     * Creates a new note.
+     * @param {Object} note - The data for the new note.
+     * @returns {Object} An object containing the endpoint URL, HTTP method, and request body for creating a new note.
+     */
     addNote: builder.mutation({
       query: (note) => ({
-        url: '',
+        url: '/notes',
         method: 'POST',
         body: note,
       }),
       invalidatesTags: ['Note'],
     }),
-    // Updates an existing note.
+
+    /**
+     * Updates an existing note.
+     * @param {Object} note - The data for the note to update, including the ID.
+     * @returns {Object} An object containing the endpoint URL, HTTP method, and request body for updating an existing note.
+     */
     updateNote: builder.mutation({
       query: (note) => ({
-        url: `/${note.id}`,
+        url: `/notes/${note.id}`,
         method: 'PUT',
         body: note,
       }),
       invalidatesTags: ['Note'],
     }),
-    // Deletes a note by ID.
+
+    /**
+     * Deletes a note by its ID.
+     * @param {string} id - The ID of the note to delete.
+     * @returns {Object} An object containing the endpoint URL and HTTP method for deleting a note by its ID.
+     */
     deleteNote: builder.mutation({
       query: (id) => ({
-        url: `/${id}`,
+        url: `/notes/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Note'],
