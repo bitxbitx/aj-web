@@ -13,40 +13,52 @@ import BounceLoader from 'react-spinners/BounceLoader';
 
 
 const Dashboard = () => {
-    const { data, isLoading, isError } = useGetMeQuery();
     return (
         <>
-            {isLoading ? (
-                <div className={styles.loader}>
-                    <BounceLoader color="#484B6A" />
-                </div>
-            ) : (
-                <div className={styles.container}>
-                    <div className={styles.column}>
-                        {data.platformAccounts.map((account) => (
+            <div className={styles.container}>
+                <div className={styles.column}>
+                    {/* {data.platformAccounts.map((account) => (
                             <AccountCard
                                 key={account._id}
                                 id={account._id}
                                 balance={account.balance}
                                 platform={account.platform}
                             />
-                        ))}
-                    </div>
-                    <Divider
-                        orientation="vertical"
-                        sx={{
-                            borderRightWidth: "medium",
-                            borderColor: "#484B6A1A",
-                            borderRadius: "10px",
-                        }}
-                        flexItem
+                        ))} */}
+                    <AccountCard
+                        id="1"
+                        balance="1000"
+                        platform="Coinbase"
+                        baki="1000"
                     />
-                    <div className={styles.column}>
-                        <h2 className={styles.notes__label}>Notes</h2>
-                        <AddNoteForm />
-                    </div>
+                    <AccountCard
+                        id="2"
+                        balance="2000"
+                        platform="Kraken"
+                        baki="1000"
+                    />
+                    <AccountCard
+                        id="3"
+                        balance="3000"
+                        platform="Binance"
+                        baki="1000"
+                    />
                 </div>
-            )}
+                <Divider
+                    orientation="vertical"
+                    sx={{
+                        borderRightWidth: "medium",
+                        borderColor: "#484B6A1A",
+                        borderRadius: "10px",
+                    }}
+                    flexItem
+                />
+                <div className={styles.column}>
+                    <h2 className={styles.notes__label}>Notes</h2>
+                    <AddNoteForm />
+                </div>
+            </div>
+
         </>
     );
 }

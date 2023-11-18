@@ -143,16 +143,6 @@ accountSchema.methods.toJSON = function () {
   return accountObject;
 };
 
-accountSchema.pre("save", async function (next) {
-  const account = this;
-
-  if (account.isModified("password")) {
-    const salt = await bcrypt.genSalt(8);
-    account.password = await bcrypt.hash(account.password, salt);
-  }
-  next();
-});
-
 accountSchema.methods.matchPassword = async function (password) {
   const account = this;
   return await bcrypt.compare(password, account.password);

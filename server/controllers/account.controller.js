@@ -117,24 +117,32 @@ const getAccount = asyncHandler(async (req, res) => {
 
 const updateAccount = asyncHandler(async (req, res) => {
   try {
-    const account = await Account.findOneAndUpdate({ _id: req.params.id }, req.body, {
-      new: true,
-    });
-    res.json({ account });
+    const accountId = req.params.id;
+
+    // Find the account by ID
+    const account = await Account.findById(accountId);
+    if (!account) {
+      return res.status(404).json({ message: 'Account not found' });
+    }
+
+    // Update account properties
+    account.username = req.body.username || account.username; // Update only if provided
+    account.name = req.body.name || account.name;
+    account.birthday = req.body.birthday || account.birthday;
+
+    // Update password if provided
+    if (req.body.password) {
+      const salt = await bcrypt.genSalt(8);
+      account.password = await bcrypt.hash(req.body.password, salt);
+    }
+
+    // Save the updated account
+    const updatedAccount = await account.save();
+
+    return res.status(200).json(updatedAccount);
   } catch (error) {
-    // Check if the error is a validation error
-    if (error instanceof mongoose.Error.ValidationError) {
-      const errors = Object.values(error.errors).map((err) => err.message);
-      return res.status(400).json({ error: errors });
-    }
-
-    // If duplicate key error return a simple message
-    if (error.code === 11000) {
-      return res.status(400).json({ error: "Account already exists" });
-    }
-
-    // If any other error return the full error
-    res.status(500).json({ error: error.message });
+    console.error('Error updating account:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 

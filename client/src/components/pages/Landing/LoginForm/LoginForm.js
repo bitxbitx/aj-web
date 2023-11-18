@@ -17,7 +17,7 @@ const LoginForm = (props) => {
 
       switch (role) {
         case "user":
-          history.push("/user");
+          history.push("/customer");
           break;
         case "admin":
           history.push("/admin");

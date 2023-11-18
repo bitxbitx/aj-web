@@ -4,6 +4,9 @@ import { Link, Route, Switch } from "react-router-dom";
 import AccountDetails from "./AccountDetails/AccountDetails";
 import styles from "./Customer.module.css";
 import Dashboard from "./Dashboard/Dashboard";
+import { useMediaQuery } from '@mui/material';
+import MySideBar from "../../common/MySideBar/MySideBar";
+
 
 /*
     Customer component
@@ -11,41 +14,19 @@ import Dashboard from "./Dashboard/Dashboard";
 */
 
 const Customer = () => {
-  const logout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("refreshToken");
-    // bring user back to landing page
-    window.location.href = "/";
-  };
+
+  const isMobile = useMediaQuery('(max-width: 600px)');
 
   return (
     <div className={styles.container}>
-      <div className={styles.sidebar}>
-        <div className={styles.logo__container}>
-          <img
-            src={"http://localhost:8000/file/assets/logo.svg"}
-            alt="logo"
-            className={styles.logo}
-          />
-        </div>
-        <Sidebar backgroundColor="transparent">
-          <Menu iconShape="square">
-            <MenuItem component={<Link to="/customer/dashboard" />}>
-              Dashboard
-            </MenuItem>
-            <MenuItem component={<Link to="/customer/account-details" />}>
-              Account Details
-            </MenuItem>
-            <MenuItem onClick={() => logout()}>Logout</MenuItem>
-          </Menu>
-        </Sidebar>
-      </div>
+      {!isMobile && <MySideBar />}
       <div className={styles.content}>
+        {isMobile && <MySideBar />}
         <Switch>
           <Route path="/customer/dashboard">
             <Dashboard />
           </Route>
-          <Route path="/customer/account-details">
+          <Route path="/customer/me">
             <AccountDetails />
           </Route>
         </Switch>

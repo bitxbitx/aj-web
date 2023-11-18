@@ -15,6 +15,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import InboxIcon from '@mui/icons-material/Inbox';
+import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
 
 const MySideBar = ({ children, ...rest }) => {
     const location = useLocation();
@@ -24,6 +25,8 @@ const MySideBar = ({ children, ...rest }) => {
     const [toggle, setToggle] = React.useState(false);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const history = useHistory();
+    const currentPath = window.location.pathname;
+    const firstSegment = currentPath.split('/')[1];
 
     const handleCollapseSidebar = () => {
         setCollapse(!collapse);
@@ -35,7 +38,7 @@ const MySideBar = ({ children, ...rest }) => {
         localStorage.removeItem("refreshToken");
         // bring user back to landing page
         history.push("/");
-      };
+    };
     const handleToggleSidebar = () => {
         setToggle(!toggle);
         toggleSidebar(toggle);
@@ -64,33 +67,41 @@ const MySideBar = ({ children, ...rest }) => {
                 >
                     <div className={styles.logo}><img src={'http://localhost:8000/file/assets/logo.svg'} alt="logo" /> </div>
                     <Menu
-                        // menuItemStyles={{
-                        //     button: ({ level, active, disabled, hover }) => {
-                        //         // only apply styles on first level elements of the tree
-                        //         if (level === 0)
-                        //             return {
-                        //                 color: active ? "white" : theme.palette.primary.main,
-                        //                 backgroundColor: active ? theme.palette.primary.main : undefined,
-                        //                 borderRadius: '15px',
-                        //                 '&:hover': {
-                        //                     color: "black",
-                        //                     backgroundColor: theme.palette.primary.main,
-                        //                 },
-                        //             };
-                        //     },
+                    // menuItemStyles={{
+                    //     button: ({ level, active, disabled, hover }) => {
+                    //         // only apply styles on first level elements of the tree
+                    //         if (level === 0)
+                    //             return {
+                    //                 color: active ? "white" : theme.palette.primary.main,
+                    //                 backgroundColor: active ? theme.palette.primary.main : undefined,
+                    //                 borderRadius: '15px',
+                    //                 '&:hover': {
+                    //                     color: "black",
+                    //                     backgroundColor: theme.palette.primary.main,
+                    //                 },
+                    //             };
+                    //     },
 
-                        // }}
+                    // }}
                     >
+                        {firstSegment === 'admin' && <>
 
-                        {/* <MenuItem active={location.pathname === "/admin/"} icon={<GridViewOutlinedIcon />} component={<Link to="/admin" />}>Dashboard</MenuItem> */}
-                        <MenuItem active={location.pathname === "/admin/accounts"} icon={<SupervisorAccountOutlinedIcon />} component={<Link to="/admin/accounts" />}>Accounts</MenuItem>
-                        <MenuItem active={location.pathname === "/admin/notes"} icon={<Inventory2OutlinedIcon />} component={<Link to="/admin/notes" />}>Notes</MenuItem>
-                        <MenuItem active={location.pathname === "/admin/transactions"} icon={<ViewListIcon />} component={<Link to="/admin/transactions" />}>Transactions</MenuItem>
-                        <MenuItem active={location.pathname === "/admin/result"} icon={<InboxIcon />} component={<Link to="/admin/result" />}>Result</MenuItem>
-                        <MenuItem active={location.pathname === "/admin/birthdays"} icon={<CakeIcon />} component={<Link to="/admin/birthdays" />}>Birthdays</MenuItem>
-                        <MenuItem active={location.pathname === "/admin/me"} icon={<AccountCircleOutlinedIcon />} component={<Link to="/admin/me" />}>Profile</MenuItem>
-                        <MenuItem onClick={handleLogout} icon={<LogoutOutlinedIcon />}>Logout</MenuItem>
-                        <MenuItem onClick={handleCollapseSidebar} icon={<ExpandCircleDownOutlinedIcon style={{ transform: collapse ? 'rotate(90deg)' : 'rotate(270deg)' }} />}>Collapse Menu</MenuItem>
+                            {/* <MenuItem active={location.pathname === "/admin/"} icon={<GridViewOutlinedIcon />} component={<Link to="/admin" />}>Dashboard</MenuItem> */}
+                            <MenuItem active={location.pathname === "/admin/accounts"} icon={<SupervisorAccountOutlinedIcon />} component={<Link to="/admin/accounts" />}>Accounts</MenuItem>
+                            <MenuItem active={location.pathname === "/admin/notes"} icon={<Inventory2OutlinedIcon />} component={<Link to="/admin/notes" />}>Notes</MenuItem>
+                            <MenuItem active={location.pathname === "/admin/transactions"} icon={<ViewListIcon />} component={<Link to="/admin/transactions" />}>Transactions</MenuItem>
+                            <MenuItem active={location.pathname === "/admin/result"} icon={<InboxIcon />} component={<Link to="/admin/result" />}>Result</MenuItem>
+                            <MenuItem active={location.pathname === "/admin/birthdays"} icon={<CakeIcon />} component={<Link to="/admin/birthdays" />}>Birthdays</MenuItem>
+                            <MenuItem active={location.pathname === "/admin/me"} icon={<AccountCircleOutlinedIcon />} component={<Link to="/admin/me" />}>Profile</MenuItem>
+                            <MenuItem onClick={handleLogout} icon={<LogoutOutlinedIcon />}>Logout</MenuItem>
+                            <MenuItem onClick={handleCollapseSidebar} icon={<ExpandCircleDownOutlinedIcon style={{ transform: collapse ? 'rotate(90deg)' : 'rotate(270deg)' }} />}>Collapse Menu</MenuItem>
+                        </>}
+                        {firstSegment === 'customer' && <>
+                            <MenuItem active={location.pathname === "/customer/dashboard"} icon={<GridViewOutlinedIcon />} component={<Link to="/customer/dashboard" />}>Dashboard</MenuItem>
+                            <MenuItem active={location.pathname === "/customer/me"} icon={<AccountCircleOutlinedIcon />} component={<Link to="/customer/me" />}>Profile</MenuItem>
+                            <MenuItem onClick={handleLogout} icon={<LogoutOutlinedIcon />}>Logout</MenuItem>
+                            <MenuItem onClick={handleCollapseSidebar} icon={<ExpandCircleDownOutlinedIcon style={{ transform: collapse ? 'rotate(90deg)' : 'rotate(270deg)' }} />}>Collapse Menu</MenuItem>
+                        </>}
                     </Menu>
                 </Sidebar>
             </div>

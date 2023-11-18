@@ -14,7 +14,7 @@ function App() {
 
       <Route path="/" exact><Landing /></Route> 
       <ProtectedRoute path="/admin" permitted-roles={["admin","staff"]}><Admin /></ProtectedRoute>
-      {/* <ProtectedRoute path="/customer" premitted-roles={["customer"]}><Customer /></ProtectedRoute> */}
+      <ProtectedRoute path="/customer" premitted-roles={["user"]}><Customer /></ProtectedRoute>
     </Switch>
   );
 }
